@@ -17,7 +17,7 @@
 
 <script>
     // Inisialisasi peta Leaflet
-    let map = L.map('map').setView([0, 0], 15); // Zoom awal ke 15 untuk tampilan lebih dekat
+    let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 9); // Zoom awal ke 15 untuk tampilan lebih dekat
 
     // Tile layer dari OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

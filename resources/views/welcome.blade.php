@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    let map = L.map('map').setView([0, 0], 15); // Perbesar map dengan zoom 15
+    let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 9); // Perbesar map dengan zoom 15 -8.378731110827148, 115.17459424051236
     let polyline = L.polyline([]).addTo(map);
     let marker;
     let tracking = false;
