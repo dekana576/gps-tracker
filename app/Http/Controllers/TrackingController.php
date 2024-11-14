@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\History;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TrackingController extends Controller
@@ -12,7 +13,7 @@ class TrackingController extends Controller
         $history = new History();
         $history->distance = $request->distance;
         $history->duration = gmdate("H:i:s", $request->duration);
-        $history->start_time = now();
+        $history->start_time = Carbon::now('Asia/Makassar');
         $history->polyline = json_encode($request->polyline);
         $history->save();
 
@@ -59,7 +60,7 @@ class TrackingController extends Controller
         $history->polyline = json_encode($validated['polyline']); // Simpan polyline sebagai JSON
         $history->duration = $validated['duration'];
         $history->distance = $validated['distance'];
-        $history->start_time = now();
+        $history->start_time = Carbon::now('Asia/Makassar');
         $history->save();
 
         return response()->json(['success' => 'History berhasil disimpan']);
