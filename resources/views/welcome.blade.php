@@ -81,7 +81,8 @@
             body: JSON.stringify({
                 polyline: positions,
                 duration: duration,
-                distance: distance
+                distance: distance,
+                startTime: startTime
             })
         }).then(response => response.json())
           .then(data => {

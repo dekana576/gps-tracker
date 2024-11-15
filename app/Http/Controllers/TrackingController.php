@@ -13,7 +13,7 @@ class TrackingController extends Controller
         $history = new History();
         $history->distance = $request->distance;
         $history->duration = gmdate("H:i:s", $request->duration);
-        $history->start_time = Carbon::now('Asia/Makassar');
+        $history->start_time = Carbon::parse($request->startTime)->timezone('Asia/Makassar');
         $history->polyline = json_encode($request->polyline);
         $history->save();
 
