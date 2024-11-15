@@ -10,7 +10,20 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2>GPS Tracker</h2>
+    <div class="d-flex justify-content-between">
+
+        <h2>GPS Tracker</h2>
+    
+        @if(Auth::check())
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-primary">
+                Logout
+            </button>
+        </form>
+        @endif
+    </div>
+
     <div id="map" style="height: 500px;"></div>
     <button id="startTracking" class="btn btn-success mt-3">Mulai Pelacakan</button>
     <button id="stopTracking" class="btn btn-danger mt-3" disabled>Stop Pelacakan</button>

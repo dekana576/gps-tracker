@@ -14,11 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\TrackingController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::post('/save-history', [TrackingController::class, 'saveHistory']);
 Route::get('/history', [TrackingController::class, 'index'])->name('history.index');
 Route::get('/history/{id}', [TrackingController::class, 'show'])->name('history.show');
 Route::delete('/history/{id}', [TrackingController::class, 'destroy'])->name('history.destroy');
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
