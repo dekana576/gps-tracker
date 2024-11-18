@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,25 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\TrackingController;
-
-
+use App\Http\Controllers\UserController;
 
 Route::post('/save-history', [TrackingController::class, 'saveHistory']);
 Route::get('/history', [TrackingController::class, 'index'])->name('history.index');
 Route::get('/history/{id}', [TrackingController::class, 'show'])->name('history.show');
 Route::delete('/history/{id}', [TrackingController::class, 'destroy'])->name('history.destroy');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Hanya admin yang dapat mengakses route ini
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])
+        ->name('admin')
+        ->middleware('is_admin');
 
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Hanya user biasa yang dapat mengakses route ini
+    Route::get('/', [UserController::class, 'index'])
+        ->name('user')
+        ->middleware('is_not_admin');
 });
