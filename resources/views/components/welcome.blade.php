@@ -2,11 +2,11 @@
 
 
     <!-- Main Content -->
-    <main class="container mx-auto py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <main class="container mx-auto py-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <!-- List User -->
             
-            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300" style="margin-left: 20px">
+            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300" style="margin: 20px">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 12a5 5 0 100-10 5 5 0 000 10zm-7 8a7 7 0 0114 0H3z" />
@@ -22,7 +22,7 @@
             </div>
 
             <!-- Data Tracking -->
-            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300">
+            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300" style="margin: 20px">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 3a7 7 0 100 14 7 7 0 000-14zm0 2a5 5 0 110 10A5 5 0 0110 5zm-1 2a1 1 0 112 0v3a1 1 0 01-2 0V7zm1 6a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Download Laporan -->
-            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300" style="margin-right: 20px">
+            <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300" style="margin: 20px">
                 <div class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M8 10V2a1 1 0 112 0v8h2.586a1 1 0 01.707 1.707l-3.586 3.586a1 1 0 01-1.414 0L6.707 11.707A1 1 0 017.414 10H8zm10 2a1 1 0 00-1 1v3H3v-3a1 1 0 10-2 0v3a2 2 0 002 2h14a2 2 0 002-2v-3a1 1 0 00-1-1z" />
