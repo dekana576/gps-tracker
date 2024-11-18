@@ -1,3 +1,4 @@
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
