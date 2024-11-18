@@ -27,6 +27,7 @@
     // Ambil polyline dari controller
     let polylineData = {!! json_encode($history->polyline) !!};
 
+
     if (polylineData.length > 0) {
         let polyline = L.polyline(polylineData, { color: 'blue' }).addTo(map);
 
