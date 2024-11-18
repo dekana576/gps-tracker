@@ -1,4 +1,4 @@
-<div class="bg-blue-100" style="min-height: 75vh">
+<div class="bg-blue-100" style="min-height: 10vh">
 
 
     <!-- Main Content -->
