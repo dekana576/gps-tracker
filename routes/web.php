@@ -17,18 +17,21 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 
 Route::post('/save-history', [TrackingController::class, 'saveHistory']);
-Route::get('/history', [TrackingController::class, 'index'])->name('history.index');
-Route::get('/history/{id}', [TrackingController::class, 'show'])->name('history.show');
-Route::delete('/history/{id}', [TrackingController::class, 'destroy'])->name('history.destroy');
+
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Hanya admin yang dapat mengakses route ini
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])
-        ->name('admin')
-        ->middleware('is_admin');
+    
 
-    // Hanya user biasa yang dapat mengakses route ini
-    Route::get('/', [UserController::class, 'index'])
-        ->name('user')
-        ->middleware('is_not_admin');
+        Route::middleware('is_admin')->group(function () {
+            Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
+            Route::get('/admin/history', [TrackingController::class, 'index'])->name('history.index');
+            Route::get('/admin/history/{id}', [TrackingController::class, 'show'])->name('history.show');
+            Route::delete('/admin/history/{id}', [TrackingController::class, 'destroy'])->name('history.destroy');
+            // Tambahkan route lain untuk admin di sini
+        });
+        
+        Route::middleware('is_not_admin')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('user');
+        });
 });
