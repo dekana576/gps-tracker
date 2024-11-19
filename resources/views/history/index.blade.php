@@ -59,11 +59,17 @@
                             searchable: false,
                             render: function (data, type, row) {
                                 return `
-                                    <a href="/admin/history/show/${data}" class="btn btn-info text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">Lihat Polyline</a>
-                                    <form action="/admin/history/delete/${data}" method="POST" style="display: inline-block;">
+                                    <a href="/admin/history/show/${data}" 
+                                       class="btn btn-info text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">
+                                       Lihat Polyline
+                                    </a>
+                                    <form action="/admin/history/delete/${data}" method="POST" style="display: inline-block;" onsubmit="return confirmDelete(event, this);">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600">Hapus</button>
+                                        <button type="submit" 
+                                                class="btn btn-danger text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600">
+                                            Hapus
+                                        </button>
                                     </form>
                                 `;
                             }
@@ -74,6 +80,16 @@
                     }
                 });
             });
+
+            // Fungsi konfirmasi penghapusan
+            function confirmDelete(event, form) {
+                event.preventDefault(); // Mencegah submit form secara langsung
+                if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                    form.submit(); // Submit form jika pengguna menekan "Yes"
+                }
+                // Jika pengguna menekan "No", tidak ada tindakan
+                return false;
+            }
         </script>
     </body>
     </html>
