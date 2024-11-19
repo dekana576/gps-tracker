@@ -27,8 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('is_admin')->group(function () {
             Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
             Route::get('/admin/history', [HistoryController::class, 'index'])->name('history.index');
-            Route::get('/admin/history/{id}', [HistoryController::class, 'show'])->name('history.show');
-            Route::delete('/admin/history/{id}', [HistoryController::class, 'destroy'])->name('history.destroy');
+            Route::get('/admin/histories', [HistoryController::class, 'getHistories'])->name('admin.histories');
+            Route::get('/admin/history/show/{id}', [HistoryController::class, 'show'])->name('history.show');
+            Route::delete('/admin/history/delete/{id}', [HistoryController::class, 'destroy'])->name('history.destroy');
             // Tambahkan route lain untuk admin di sini
         });
         

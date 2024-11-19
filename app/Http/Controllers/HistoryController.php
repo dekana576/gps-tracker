@@ -1,19 +1,33 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\History;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class HistoryController extends Controller
 {
+    // Method untuk menampilkan halaman index
     public function index()
     {
-        $histories = History::all();
-        return view('history.index', compact('histories'));
+        return view('history.index');
     }
 
+    // Method untuk mengembalikan data ke DataTables
+    public function getHistories(Request $request)
+    {
+        $histories = History::select('id', 'username', 'company_name', 'distance', 'duration', 'start_time');
+
+        return datatables()->of($histories)
+            ->addColumn('actions', function ($history) {
+                return '
+                    <a href="/admin/history/' . $history->id . '" class="btn btn-info btn-sm">Lihat Polyline</a>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="' . $history->id . '">Hapus</button>
+                ';
+            })
+            ->rawColumns(['actions']) // Agar HTML di kolom "actions" tidak di-escape
+            ->make(true);
+    }
     public function show($id)
     {
         // Ambil history berdasarkan ID
@@ -32,25 +46,6 @@ class HistoryController extends Controller
         $history = History::findOrFail($id);
         $history->delete();
         return redirect()->route('history.index')->with('success', 'History deleted successfully');
-    }
-
-    public function store(Request $request)
-    {
-        // Validasi data dari request
-        $validated = $request->validate([
-            'polyline' => 'required|array', // Pastikan polyline adalah array
-            'duration' => 'required|numeric',
-            'distance' => 'required|numeric',
-        ]);
-
-        // Simpan history pelacakan ke database
-        $history = new History();
-        $history->polyline = json_encode($validated['polyline']); // Simpan polyline sebagai JSON
-        $history->duration = $validated['duration'];
-        $history->distance = $validated['distance'];
-        $history->start_time = Carbon::now('Asia/Makassar');
-        $history->save();
-
-        return response()->json(['success' => 'History berhasil disimpan']);
+        return view('history.index');
     }
 }

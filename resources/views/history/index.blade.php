@@ -1,137 +1,80 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-    <x-app-layout>
-    
+<x-app-layout>
+    <!DOCTYPE html>
+    <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>GPS Tracking History</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            /* Custom styles for a modern look */
-            body {
-                background-color: #f4f8fb;
-                font-family: 'Arial', sans-serif;
-        }
-        
-        .container {
-            max-width: 1200px;
-        }
+        <title>Riwayat Pelacakan GPS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    </head>
+    <body class="bg-gray-100 font-sans antialiased">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-8">
+                <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Riwayat Pelacakan GPS</h2>
+                    
+                    <table id="historiesTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="px-4 py-2 border">ID</th>
+                                <th class="px-4 py-2 border">Username</th>
+                                <th class="px-4 py-2 border">Company Name</th>
+                                <th class="px-4 py-2 border">Distance (km)</th>
+                                <th class="px-4 py-2 border">Duration</th>
+                                <th class="px-4 py-2 border">Start Time</th>
+                                <th class="px-4 py-2 border">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <!-- DataTables akan mengisi ini -->
+                        </tbody>
+                    </table>
 
-        .table {
-            border-collapse: collapse;
-        }
-
-        .table th, .table td {
-            text-align: center;
-            padding: 15px;
-        }
-
-        .table th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .table td {
-            background-color: #fff;
-        }
-
-        .btn {
-            margin-top: 5px;
-        }
-        
-        .alert {
-            margin-bottom: 20px;
-        }
-
-        /* Button Hover Effects */
-        .btn-info:hover {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-        }
-        
-        .btn-danger:hover {
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Responsive Table */
-        @media (max-width: 767px) {
-            .table th, .table td {
-                padding: 10px;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container mt-5">
-        <h2 class="page-title">Riwayat Pelacakan GPS</h2>
-        @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+                
+                </div>
+            </div>
         </div>
-        @endif
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>Perusahaan</th>
-                        <th>Jarak (km)</th>
-                        <th>Durasi</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($histories as $history)
-                    <tr>
-                        <td>{{ $history->username }}</td>
-                        <td>{{ $history->company_name }}</td>
-                        <td>{{ $history->distance }} km</td>
-                        <td>{{ $history->duration }}</td>
-                        <td>{{ $history->start_time->format('d-m-Y H:i:s') }}</td>
-                        <td>
-                            <a href="{{ route('history.show', $history->id) }}" class="btn btn-info">Lihat Polyline</a>
-                            <form action="{{ route('history.destroy', $history->id) }}" method="POST" class="d-inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="text-center">Tidak ada riwayat ditemukan</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <a href="/" class="btn btn-primary">Kembali ke Halaman Utama</a>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        
+        <!-- Tambahkan Script -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#historiesTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('admin.histories') }}",
+                    columns: [
+                        { data: 'id', name: 'id' },
+                        { data: 'username', name: 'username', defaultContent: 'NULL' },
+                        { data: 'company_name', name: 'company_name', defaultContent: 'NULL' },
+                        { data: 'distance', name: 'distance', render: (data) => `${parseFloat(data).toFixed(2)} km` },
+                        { data: 'duration', name: 'duration' },
+                        { data: 'start_time', name: 'start_time' },
+                        {
+                            data: 'id',
+                            name: 'actions',
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                return `
+                                    <a href="/admin/history/show/${data}" class="btn btn-info text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">Lihat Polyline</a>
+                                    <form action="/admin/history/delete/${data}" method="POST" style="display: inline-block;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600">Hapus</button>
+                                    </form>
+                                `;
+                            }
+                        }
+                    ],
+                    language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                    }
+                });
+            });
+        </script>
+    </body>
+    </html>
 </x-app-layout>
-
-</html>
