@@ -11,6 +11,7 @@ class TrackingController extends Controller
     public function saveHistory(Request $request)
     {
         $history = new History();
+        $history->username = $request->username;
         $history->distance = $request->distance;
         $history->duration = gmdate("H:i:s", $request->duration);
         $history->start_time = Carbon::parse($request->startTime)->timezone('Asia/Makassar');

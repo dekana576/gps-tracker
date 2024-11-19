@@ -91,6 +91,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>Nama</th>
                         <th>Jarak (km)</th>
                         <th>Durasi</th>
                         <th>Tanggal Mulai</th>
@@ -100,6 +101,7 @@
                 <tbody>
                     @forelse ($histories as $history)
                     <tr>
+                        <td>{{ $history->username }}</td>
                         <td>{{ $history->distance }} km</td>
                         <td>{{ $history->duration }}</td>
                         <td>{{ $history->start_time->format('d-m-Y H:i:s') }}</td>

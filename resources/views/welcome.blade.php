@@ -84,6 +84,8 @@
 </head>
 
 <body>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light position-relative">
         <div class="container-fluid">
@@ -121,6 +123,7 @@
     </nav>
 
     <!-- Main Content -->
+    <p>Welcome, {{ Auth::user()->name }}</p>
     <div class="container mt-3">
         <div id="map"></div>
 
@@ -147,6 +150,7 @@
         let startTime;
         let interval;
         let positions = [];
+        let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
 
         // Tile layer dari OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -204,7 +208,8 @@
                     polyline: positions,
                     duration: duration,
                     distance: distance,
-                    startTime: startTime
+                    startTime: startTime,
+                    username: username,
                 })
             }).then(response => response.json())
               .then(data => {
