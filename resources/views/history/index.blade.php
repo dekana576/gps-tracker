@@ -92,6 +92,7 @@
                 <thead>
                     <tr>
                         <th>Nama</th>
+                        <th>Perusahaan</th>
                         <th>Jarak (km)</th>
                         <th>Durasi</th>
                         <th>Tanggal Mulai</th>
@@ -102,6 +103,7 @@
                     @forelse ($histories as $history)
                     <tr>
                         <td>{{ $history->username }}</td>
+                        <td>{{ $history->company_name }}</td>
                         <td>{{ $history->distance }} km</td>
                         <td>{{ $history->duration }}</td>
                         <td>{{ $history->start_time->format('d-m-Y H:i:s') }}</td>

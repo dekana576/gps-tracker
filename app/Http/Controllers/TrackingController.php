@@ -12,6 +12,7 @@ class TrackingController extends Controller
     {
         $history = new History();
         $history->username = $request->username;
+        $history->company_name = $request->company;
         $history->distance = $request->distance;
         $history->duration = gmdate("H:i:s", $request->duration);
         $history->start_time = Carbon::parse($request->startTime)->timezone('Asia/Makassar');
