@@ -57,7 +57,7 @@
     <!-- Footer Content (Optional) -->
     <footer class=" text-black py-4">
         <div class="container mx-auto text-center">
-            <p>&copy; PT. Astra Internasional TBK-Honda. © 2024</p>
+            <p>&copy; 2024 Astra On The Go. All Rights Reserved.</p>
         </div>
     </footer>
 </div>

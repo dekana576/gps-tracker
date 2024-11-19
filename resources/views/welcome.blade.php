@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +19,6 @@
             padding: 0;
         }
 
-        /* Make the map responsive */
         #map {
             height: 250px;
             width: 100%;
@@ -28,30 +30,30 @@
             }
         }
 
+        .navbar {
+            padding: 0.5rem 1rem;
+        }
+
         .navbar-brand-center {
             display: flex;
             justify-content: center;
             align-items: center;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
         }
 
-        .navbar .navbar-brand img {
-            height: 30px;
-            margin: 0 5px;
+        .navbar-brand-center img {
+            height: 40px;
+            margin: 0 10px;
         }
 
-        .navbar-toggler {
-            z-index: 1;
+        .navbar-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
         }
 
-        .container {
-            max-width: 100%;
-            padding: 10px;
-        }
-
-        /* Style for the buttons */
         .btn {
             width: 100%;
             margin-bottom: 10px;
@@ -62,24 +64,6 @@
             padding: 15px 0;
             text-align: center;
         }
-
-        .footer p {
-            margin: 0;
-        }
-
-        /* Responsive layout for buttons */
-        @media (min-width: 768px) {
-            .d-flex-row {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-            }
-
-            .btn {
-                width: auto;
-                flex-grow: 1;
-            }
-        }
     </style>
 </head>
 
@@ -87,26 +71,22 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light position-relative">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <!-- Teks "Astra On The Go" di kiri -->
-            <a class="navbar-brand" href="#">Astra On The Go</a>
-
-            <!-- Logo di tengah -->
+            <!-- Logo dan teks di tengah -->
             <div class="navbar-brand-center">
-                <a class="navbar-brand" href="#">
-                    <img src="images/astra.png" alt="Logo 1">
-                    <img src="images/best.png" alt="Logo 2">
-                </a>
+                <img src="images/astra.png" alt="Logo Astra">
+                <p class="navbar-text">Astra On The Go</p>
+                <img src="images/best.png" alt="Logo Best">
             </div>
 
-            <!-- Tombol untuk navbar (toggler) -->
+            <!-- Tombol Navbar Toggler -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Menu Navbar lainnya -->
+            <!-- Menu Navbar -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     @if(Auth::check())
@@ -123,7 +103,7 @@
     </nav>
 
     <!-- Main Content -->
-    <p>Welcome, {{ Auth::user()->name }}</p>
+    <p> Welcome, {{ Auth::user()->name }} <br> From, {{ Auth::user()->company_name }}</p>
     <div class="container mt-3">
         <div id="map"></div>
 
@@ -141,6 +121,10 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
 
     <script>
         let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 9); // Perbesar map dengan zoom 15
