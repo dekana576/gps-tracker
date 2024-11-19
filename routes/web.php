@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HistoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +26,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::middleware('is_admin')->group(function () {
             Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
-            Route::get('/admin/history', [TrackingController::class, 'index'])->name('history.index');
-            Route::get('/admin/history/{id}', [TrackingController::class, 'show'])->name('history.show');
-            Route::delete('/admin/history/{id}', [TrackingController::class, 'destroy'])->name('history.destroy');
+            Route::get('/admin/history', [HistoryController::class, 'index'])->name('history.index');
+            Route::get('/admin/history/{id}', [HistoryController::class, 'show'])->name('history.show');
+            Route::delete('/admin/history/{id}', [HistoryController::class, 'destroy'])->name('history.destroy');
             // Tambahkan route lain untuk admin di sini
         });
         
