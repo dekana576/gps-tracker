@@ -3,16 +3,19 @@
 <style>
         /* CSS untuk latar belakang */
         .background-image {
-            background-image: url('{{ asset('images/ahm.jpg') }}'); /* Ganti dengan path gambar Anda */
-            background-size: cover; /* Mengatur ukuran gambar agar menutupi seluruh area */
-            background-position: center; /* Memusatkan gambar */
-            background-repeat: no-repeat; /* Tidak mengulang gambar */
-            min-height: 100vh; /* Mengatur tinggi minimum untuk mengisi layar */
-            display: flex; /* Menggunakan flexbox untuk memposisikan konten */
-            justify-content: center; /* Memusatkan konten secara horizontal */
-            align-items: center; /* Memusatkan konten secara vertikal */
-            position: relative; /* Mengatur posisi relatif untuk elemen di dalamnya */
-        }
+    background-image: url('../images/ahm.jpg'); /* Path relatif dari folder public */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: white; /* Untuk teks agar terlihat di atas gambar */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Tambahkan bayangan pada teks */
+}
+
 
         /* CSS untuk membuat konten transparan */
         .transparent-card {

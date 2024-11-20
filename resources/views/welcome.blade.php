@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,6 +61,40 @@
             padding: 15px 0;
             text-align: center;
         }
+
+        /* Styling for welcome section */
+        .welcome-container {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .welcome-container p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .welcome-container .username {
+            font-size: 1.8rem;
+            color: #007bff;
+        }
+
+        .welcome-container .company-name {
+            font-size: 1.5rem;
+            color: #28a745;
+        }
+
+        .welcome-container hr {
+            width: 50%;
+            margin: 20px auto;
+            border-top: 2px solid #007bff;
+        }
+
+        /* Add margin to map section */
+        #map {
+            margin-top: 30px;
+        }
     </style>
 </head>
 
@@ -103,7 +134,12 @@
     </nav>
 
     <!-- Main Content -->
-    <p> Welcome, {{ Auth::user()->name }} <br> From, {{ Auth::user()->company_name }}</p>
+    <div class="welcome-container">
+        <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
+        <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
+        <hr>
+    </div>
+
     <div class="container mt-3">
         <div id="map"></div>
 
@@ -121,10 +157,6 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
-
 
     <script>
         let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 9); // Perbesar map dengan zoom 15
