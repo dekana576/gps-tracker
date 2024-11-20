@@ -64,4 +64,10 @@ class User extends Authenticatable
     {
         return $this->is_admin;
     }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'user_id');
+    }
+
 }

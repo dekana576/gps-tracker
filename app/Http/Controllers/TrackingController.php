@@ -11,6 +11,7 @@ class TrackingController extends Controller
     public function saveHistory(Request $request)
     {
         $history = new History();
+        $history->user_id = $request -> user_id;
         $history->username = $request->username;
         $history->company_name = $request->company;
         $history->distance = $request->distance;

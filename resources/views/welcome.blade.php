@@ -136,6 +136,7 @@
         let positions = [];
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
         let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
+        let user_id = "{{ Auth::check() ? Auth::user()->id : '' }}";
 
         // Tile layer dari OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -196,6 +197,7 @@
                     startTime: startTime,
                     username: username,
                     company: company,
+                    user_id: user_id,
                 })
             }).then(response => response.json())
               .then(data => {

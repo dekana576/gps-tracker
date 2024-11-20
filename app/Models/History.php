@@ -15,6 +15,7 @@ class History extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'distance',
         'duration',
         'start_time',
@@ -30,5 +31,39 @@ class History extends Model
         'start_time' => 'datetime',
         'polyline' => 'array', // Polyline disimpan dalam bentuk array JSON
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($history) {
+            self::updateUserTotals($history->user_id);
+        });
+
+        static::deleted(function ($history) {
+            self::updateUserTotals($history->user_id);
+        });
+    }
+
+    protected static function updateUserTotals($userId)
+    {
+        $totals = self::where('user_id', $userId)
+            ->selectRaw('SUM(distance) as total_distance, SUM(duration) as total_duration')
+            ->first();
+
+        $user = User::find($userId);
+        if ($user) {
+            $user->update([
+                'total_distance' => $totals->total_distance ?? 0,
+                'total_duration' => $totals->total_duration ?? 0,
+            ]);
+        }
+    }
+
 }
 
