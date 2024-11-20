@@ -20,8 +20,9 @@
                                 <tr>
                                     <th class="px-4 py-2 border">ID</th>
                                     <th class="px-4 py-2 border">Username</th>
+                                    <th class="px-4 py-2 border">Perusahaan</th>
                                     <th class="px-4 py-2 border">Total Jarak (km)</th>
-                                    <th class="px-4 py-2 border">Total Durasi (menit)</th>
+                                    <th class="px-4 py-2 border">Total Durasi</th>
                                 </tr>
                             </tr>
                         </thead>
@@ -51,6 +52,7 @@
                 columns: [
                     { data: 'id' },
                     { data: 'name' },
+                    { data: 'company_name' },
                     { data: 'total_distance', render: function(data, type, row) {
                         return parseFloat(data).toFixed(2); // Format ke 2 desimal
                     }},

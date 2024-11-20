@@ -20,7 +20,7 @@ class AdminController extends Controller
     public function Getuserindex(Request $request)
     {
         // Ambil parameter untuk pagination dan sorting dari DataTables request
-        $columns = ['id', 'name', 'total_distance', 'total_duration'];
+        $columns = ['id', 'name','company_name', 'total_distance', 'total_duration'];
 
         // Query untuk mengambil data pengguna
         $usersQuery = User::with('histories')
@@ -58,6 +58,7 @@ class AdminController extends Controller
                                 return [
                                     'id' => $user->id,
                                     'name' => $user->name,
+                                    'company_name' => $user->company_name,
                                     'total_distance' => $user->total_distance,
                                     'total_duration' => $user->histories->first() ? $user->histories->first()->total_duration : '00:00:00',
                                 ];
