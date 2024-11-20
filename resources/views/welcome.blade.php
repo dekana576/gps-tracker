@@ -33,7 +33,7 @@
 
         .navbar-brand-center {
             display: flex;
-            justify-content: center;
+            justify-content: left;
             align-items: center;
             width: 100%;
         }
