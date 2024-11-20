@@ -52,17 +52,24 @@ class AdminController extends Controller
 
         // Pagination untuk DataTables
         $users = $usersQuery->skip($request->input('start', 0))
-                            ->take($request->input('length', 10))
-                            ->get()
-                            ->map(function ($user) {
-                                return [
-                                    'id' => $user->id,
-                                    'name' => $user->name,
-                                    'company_name' => $user->company_name,
-                                    'total_distance' => $user->total_distance,
-                                    'total_duration' => $user->histories->first() ? $user->histories->first()->total_duration : '00:00:00',
-                                ];
-                            });
+            ->take($request->input('length', 10))
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'company_name' => $user->company_name,
+                    'total_distance' => $user->total_distance,
+                    'total_duration' => $user->histories->first() ? $user->histories->first()->total_duration : '00:00:00',
+                    'actions' =>
+                                '<button class="edit-btn bg-green-500 text-white px-3 py-1 rounded" data-id="' . $user->id . '">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded" data-id="' . $user->id . '">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>',
+                ];
+            });
 
         // Menghitung total records tanpa filter
         $totalRecords = User::count();
@@ -77,4 +84,34 @@ class AdminController extends Controller
             'data' => $users, // data yang ditampilkan di tabel
         ]);
     }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id); // Cari user berdasarkan ID
+        return view('data-users.edit', compact('user')); // Tampilkan view edit
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update($request->only(['name', 'company_name']));
+
+        return redirect()->route('user.index')->with('success', 'Data pengguna berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['success' => 'Data pengguna berhasil dihapus.']);
+    }
+
+
+
 }

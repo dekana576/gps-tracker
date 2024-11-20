@@ -15,6 +15,9 @@
                 <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
                     <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Riwayat Pelacakan GPS</h2>
                     
+
+                    
+                    
                     <div class="mb-4">
                         <label for="dateFilter" class="block text-gray-700">Filter by Date:</label>
                         <input type="text" id="dateFilter" class="border rounded p-2" placeholder="Select a date">
@@ -88,20 +91,29 @@
                             searchable: false,
                             render: function (data, type, row) {
                                 return `
+                                <div class="flex space-x-2 items-center">
+                                    <!-- Tombol Lihat Polyline dengan Icon -->
                                     <a href="/admin/history/show/${data}" 
-                                       class="btn btn-info text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">
-                                       Lihat Polyline
+                                    class="flex items-center justify-center w-10 h-10 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                    <!-- Heroicon Polyline Icon (Misal Icon Map) -->
+                                    <i class="fas fa-map-marker-alt"></i>
                                     </a>
-                                    <form action="/admin/history/delete/${data}" method="POST" style="display: inline-block;" onsubmit="return confirmDelete(event, this);">
+
+                                    <!-- Tombol Hapus dengan Icon -->
+                                    <form action="/admin/history/delete/${data}" method="POST" onsubmit="return confirmDelete(event, this);" class="flex items-center justify-center w-10 h-10">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" 
-                                                class="btn btn-danger text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600">
-                                            Hapus
+                                                class="w-full h-full flex items-center justify-center bg-red-500 text-white rounded hover:bg-red-600">
+                                            <!-- Heroicon Trash Icon -->
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
+                                </div>
+
                                 `;
                             }
+
                         }
                     ],
                     language: {

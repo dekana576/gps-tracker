@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\History;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -29,29 +30,33 @@ class HistoryController extends Controller
         }
 
         return datatables()->of($histories)
-            ->addColumn('actions', function ($history) {
-                return '
-                    <a href="/admin/history/' . $history->id . '" class="btn btn-info btn-sm">Lihat Polyline</a>
-                    <button class="btn btn-danger btn-sm delete-btn" data-id="' . $history->id . '">Hapus</button>
-                ';
-            })  
-            ->rawColumns(['actions']) // Agar HTML di kolom "actions" tidak di-escape
-            ->make(true);
+        ->editColumn('start_time', function ($history) {
+            return Carbon::parse($history->start_time)->format('l, d F Y H:i:s');
+        })
+        ->addColumn('actions', function ($history) {
+            return '
+                <a href="/admin/history/' . $history->id . '" class="btn btn-info btn-sm">Lihat Polyline</a>
+                <button class="btn btn-danger btn-sm delete-btn" data-id="' . $history->id . '">Hapus</button>
+            ';
+        })
+        ->rawColumns(['actions']) // Agar HTML di kolom "actions" tidak di-escape
+        ->make(true);
+
     }
 
     public function saveHistory(Request $request)
     {
         $data = $request->all();
-    
-        // Cek apakah data dengan username dan startTime yang sama sudah ada
+        
+        // Cek apakah data dengan username dan start_time yang sama sudah ada
         $existingTracking = History::where('username', $data['username'])
-                                            ->where('start_time', $data['start_time'])
-                                            ->first();
-    
+                                    ->where('start_time', $data['start_time'])
+                                    ->first();
+
         if ($existingTracking) {
             return response()->json(['message' => 'Data tracking sudah ada'], 100);
         }
-    
+
         // Jika tidak ada data duplikat, simpan data ke database
         $trackingHistory = new History();
         $trackingHistory->username = $data['username'];
@@ -59,11 +64,15 @@ class HistoryController extends Controller
         $trackingHistory->polyline = json_encode($data['polyline']);
         $trackingHistory->duration = $data['duration'];
         $trackingHistory->distance = $data['distance'];
-        $trackingHistory->start_time = $data['start_time'];
+
+        // Format start_time dengan Carbon
+        $trackingHistory->start_time = Carbon::parse($data['start_time'])->format('Y-m-d H:i:s');
+        
         $trackingHistory->save();
-    
+
         return response()->json(['message' => 'History berhasil disimpan']);
     }
+
 
     public function show($id)
     {

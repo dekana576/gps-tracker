@@ -33,6 +33,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Tambahkan route lain untuk admin di sini
             Route::get('/admin/user', [AdminController::class, 'userindex'])->name('user.index');
             Route::get('admin/user-histories', [AdminController::class, 'Getuserindex'])->name('user.histories');
+            // Route untuk halaman edit
+            Route::get('/users/{id}/edit', [AdminController::class, 'edit'])->name('user.edit');
+
+            // Route untuk update data pengguna
+            Route::put('/users/{id}', [AdminController::class, 'update'])->name('user.update');
+
+            // Route untuk hapus data pengguna
+            Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('user.destroy');
 
         });
         

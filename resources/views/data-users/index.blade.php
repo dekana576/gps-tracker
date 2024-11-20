@@ -23,6 +23,7 @@
                                     <th class="px-4 py-2 border">Perusahaan</th>
                                     <th class="px-4 py-2 border">Total Jarak (km)</th>
                                     <th class="px-4 py-2 border">Total Durasi</th>
+                                    <th class="px-4 py-2 border">Aksi</th>
                                 </tr>
                             </tr>
                         </thead>
@@ -56,7 +57,8 @@
                     { data: 'total_distance', render: function(data, type, row) {
                         return parseFloat(data).toFixed(2); // Format ke 2 desimal
                     }},
-                    { data: 'total_duration' }
+                    { data: 'total_duration' },
+                    { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
                 ],
                 language: {
                     "processing": "Loading...",
@@ -74,7 +76,32 @@
                     }
                 }
             });
+
         });
+        $(document).on('click', '.edit-btn', function() {
+            const userId = $(this).data('id');
+            alert('Edit user dengan ID: ' + userId);
+            // Redirect ke halaman edit atau buka modal
+            window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route
+        });
+
+        $(document).on('click', '.delete-btn', function() {
+            const userId = $(this).data('id');
+            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                $.ajax({
+                    url: `/users/${userId}`, // Ganti URL sesuai route
+                    type: 'DELETE',
+                    success: function(result) {
+                        alert('User berhasil dihapus!');
+                        $('#userTable').DataTable().ajax.reload(); // Refresh tabel
+                    },
+                    error: function(err) {
+                        alert('Terjadi kesalahan saat menghapus user.');
+                    }
+                });
+            }
+        });
+
     </script>
 </body>
 </html>
