@@ -49,7 +49,9 @@
             flex-grow: 1;
             text-align: center;
             margin: 0;
+            padding-top: 20px;
         }
+
 
         .btn {
             width: 100%;
@@ -70,18 +72,18 @@
         }
 
         .welcome-container p {
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #333;
         }
 
         .welcome-container .username {
-            font-size: 1.8rem;
+            font-size: 1rem;
             color: #007bff;
         }
 
         .welcome-container .company-name {
-            font-size: 1.5rem;
+            font-size: 1rem;
             color: #28a745;
         }
 
@@ -107,8 +109,8 @@
             <!-- Logo dan teks di tengah -->
             <div class="navbar-brand-center">
                 <img src="images/astra.png" alt="Logo Astra">
-                <p class="navbar-text">Astra On The Go</p>
                 <img src="images/best.png" alt="Logo Best">
+                
             </div>
 
             <!-- Tombol Navbar Toggler -->
@@ -135,6 +137,7 @@
 
     <!-- Main Content -->
     <div class="welcome-container">
+        <p>Astra On The Go</p>
         <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
         <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
         <hr>
