@@ -39,6 +39,32 @@ class HistoryController extends Controller
             ->make(true);
     }
 
+    public function saveHistory(Request $request)
+    {
+        $data = $request->all();
+    
+        // Cek apakah data dengan username dan startTime yang sama sudah ada
+        $existingTracking = History::where('username', $data['username'])
+                                            ->where('start_time', $data['start_time'])
+                                            ->first();
+    
+        if ($existingTracking) {
+            return response()->json(['message' => 'Data tracking sudah ada'], 100);
+        }
+    
+        // Jika tidak ada data duplikat, simpan data ke database
+        $trackingHistory = new History();
+        $trackingHistory->username = $data['username'];
+        $trackingHistory->company_name = $data['company_name'];
+        $trackingHistory->polyline = json_encode($data['polyline']);
+        $trackingHistory->duration = $data['duration'];
+        $trackingHistory->distance = $data['distance'];
+        $trackingHistory->start_time = $data['start_time'];
+        $trackingHistory->save();
+    
+        return response()->json(['message' => 'History berhasil disimpan']);
+    }
+
     public function show($id)
     {
         // Ambil history berdasarkan ID

@@ -23,7 +23,7 @@
                     <table id="historiesTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
                         <thead class="bg-blue-500 text-white">
                             <tr>
-                                <th class="px-4 py-2 border">ID</th>
+                                <th class="px-4 py-2 border">NO</th>
                                 <th class="px-4 py-2 border">Username</th>
                                 <th class="px-4 py-2 border">Company Name</th>
                                 <th class="px-4 py-2 border">Distance (km)</th>
@@ -33,14 +33,14 @@
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
-                            <!-- DataTables akan mengisi ini -->
+                            <!-- DataTables will populate this -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
         
-        <!-- Tambahkan Script -->
+        <!-- Add Scripts -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -54,18 +54,25 @@
                     }
                 });
 
-                // Initialize DataTable
+                // Initialize DataTable with dynamic 'NO' numbering
                 $('#historiesTable').DataTable({
                     processing: true,
                     serverSide: true,
                     ajax: "{{ route('admin.histories') }}",
                     columns: [
-                        { data: 'id', name: 'id' },
+                        {
+                            data: 'id', 
+                            name: 'id', 
+                            render: function(data, type, row, meta) {
+                                // Generate a dynamic number (NO) based on row index
+                                return meta.row + 1;
+                            }
+                        },
                         { 
                             data: 'username', 
                             name: 'username', 
                             render: function(data, type, row) {
-                                // Count occurrences of the same username
+                                // Display username without duplicates
                                 return data + (row.count > 1 ? ` (${row.count})` : '');
                             },
                             defaultContent: 'NULL' 
@@ -79,7 +86,7 @@
                             name: 'actions',
                             orderable: false,
                             searchable: false,
-                                render: function (data, type, row) {
+                            render: function (data, type, row) {
                                 return `
                                     <a href="/admin/history/show/${data}" 
                                        class="btn btn-info text-white bg-blue-500 px-2 py-1 rounded hover:bg-blue-600">
@@ -103,14 +110,13 @@
                 });
             });
 
-            // Fungsi konfirmasi penghapusan
+            // Confirm delete function
             function confirmDelete(event, form) {
-                event.preventDefault(); // Mencegah submit form secara langsung
+                event.preventDefault(); // Prevent the form from submitting directly
                 if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-                    form.submit(); // Submit form jika pengguna menekan "Yes"
+                    form.submit(); // Submit the form if the user confirms
                 }
-                // Jika pengguna menekan "No", tidak ada tindakan
-                return false;
+                return false; // Prevent default action if the user cancels
             }
         </script>
     </body>
