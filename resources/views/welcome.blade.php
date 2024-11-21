@@ -9,6 +9,8 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Mengimpor font DM Serif Text */
+
         body {
             font-family: 'Roboto', Arial, sans-serif;
             background-color: #f8f9fa;
@@ -53,24 +55,28 @@
         }
 
         .welcome-container p {
-            font-size: 1.1rem;
-            margin: 5px 0;
+            font-size: 1.1rem; /* Smaller font for welcome and from */
+            margin: 3px 0;
         }
 
         .username {
+            font-family: 'Roboto', sans-serif; /* Font untuk nama pengguna */
+            font-size: 1.2rem; /* Ukuran sedikit lebih besar */
+            font-weight: 500; /* Ketebalan sedang */
             color: #007bff;
-            font-weight: bold;
         }
 
         .company-name {
-            color: #28a745;
-            font-weight: bold;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #28a745; /* Warna hijau */
         }
 
         .welcome-container hr {
+            border-top: 2px solid #007bff; /* Garis biru */
             width: 50%;
-            margin: 20px auto;
-            border-top: 2px solid #007bff;
+            margin: 15px auto;
         }
 
         .buttons-container button,
@@ -81,6 +87,49 @@
             padding: 10px 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-hover {
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #007bff; /* Default background color */
+    color: white; /* Text color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Default shadow */
+}
+
+.custom-hover:hover {
+    background-color: #0056b3; /* Darker background on hover */
+    color: #fff; /* Keep text color white */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+    transform: scale(1.05); /* Slightly enlarge button */
+}
+
+.btn-danger.custom-hover {
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #dc3545; /* Default red background */
+    color: white; /* Text color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Default shadow */
+}
+
+.btn-danger.custom-hover:hover {
+    background-color: #c82333; /* Darker red for hover */
+    color: white; /* Keep text color white */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* More pronounced shadow on hover */
+    transform: translateY(-3px) scale(1.05); /* Slightly raised and enlarged */
+}
+
+        .btn-danger:disabled.custom-hover {
+            background-color: #d9534f; /* Warna merah pucat saat disabled */
+            box-shadow: none; /* Tidak ada efek hover saat disabled */
+            transform: none;
+            cursor: not-allowed;
         }
 
         .footer {
@@ -126,7 +175,7 @@
     <!-- Main Content -->
     <div class="container mt-4">
         <div class="welcome-container">
-            <p>Astra On The Go</p>
+        <p style="font-size: 40px; font-family: 'DM Serif Text', serif; color: #000;">Astra On The Go</p>
             <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
             <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
             <hr>
@@ -137,11 +186,10 @@
         </div>
 
         <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
-            <button id="startTracking" class="btn btn-success">Start Tracking</button>
-            <button id="stopTracking" class="btn btn-danger" disabled>Stop Tracking</button>
+            <button id="startTracking" class="btn btn-success custom-hover">Start Tracking</button>
+            <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop Tracking</button>
         </div>
-    </div>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 Astra On The Go. All Rights Reserved.</p>

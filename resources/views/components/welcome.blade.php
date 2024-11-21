@@ -1,3 +1,4 @@
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <div class="bg-blue-100" style="min-height: 9vh">
 
     <!-- Main Content -->
