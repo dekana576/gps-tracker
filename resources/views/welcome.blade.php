@@ -136,10 +136,9 @@
             <div id="map"></div>
         </div>
 
-        <div class="mt-4 buttons-container">
-            <button id="startTracking" class="btn btn-success">Mulai Pelacakan</button>
-            <button id="stopTracking" class="btn btn-danger" disabled>Stop Pelacakan</button>
-            <a href="{{ route('history.index') }}" class="btn btn-primary">Lihat History</a>
+        <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
+            <button id="startTracking" class="btn btn-success">Start Tracking</button>
+            <button id="stopTracking" class="btn btn-danger" disabled>Stop Tracking</button>
         </div>
     </div>
 
