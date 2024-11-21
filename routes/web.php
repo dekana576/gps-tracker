@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +42,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             // Route untuk hapus data pengguna
             Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('user.destroy');
+
+
+            // Route untuk ekspor laporan User
+            Route::get('/export/users', [ReportController::class, 'exportUsers'])->name('export.users');
+
+            // Route untuk ekspor laporan History
+            Route::get('/export/histories', [ReportController::class, 'exportHistories'])->name('export.histories');
+
+            Route::get('/admin/reports', function () {
+                return view('reports.index');
+            })->name('reports.index');
+            
+
 
         });
         

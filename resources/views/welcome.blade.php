@@ -205,7 +205,7 @@
                         map.setView(latlng, 15); // Pastikan zoom tetap di 15
                     });
                 }
-            }, 3000);
+            }, 1000);
         });
 
         document.getElementById('stopTracking').addEventListener('click', function () {

@@ -5,91 +5,96 @@ namespace App\Http\Controllers;
 use App\Models\History;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 
 class HistoryController extends Controller
 {
-    // Method untuk menampilkan halaman index
+    // Menampilkan halaman index
     public function index()
     {
         return view('history.index');
     }
 
-    // Method untuk mengembalikan data ke DataTables
+    // Mengembalikan data untuk DataTables
     public function getHistories(Request $request)
     {
-        // Start building the query
+        // Mulai query untuk mengambil data
         $histories = History::select('id', 'username', 'company_name', 'distance', 'duration', 'start_time');
 
-        // Filter data berdasarkan tanggal
+        // Filter data berdasarkan tanggal jika ada parameter 'date'
         if ($request->has('date') && !empty($request->date)) {
             $histories->whereDate('start_time', $request->date);
-        } else {
-            // Secara default, filter data dengan tanggal hari ini
-            $histories->whereDate('start_time', now()->toDateString());
         }
 
+        // Return data ke DataTables
         return datatables()->of($histories)
-        ->editColumn('start_time', function ($history) {
-            return Carbon::parse($history->start_time)->format('l, d F Y H:i:s');
-        })
-        ->addColumn('actions', function ($history) {
-            return '
-                <a href="/admin/history/' . $history->id . '" class="btn btn-info btn-sm">Lihat Polyline</a>
-                <button class="btn btn-danger btn-sm delete-btn" data-id="' . $history->id . '">Hapus</button>
-            ';
-        })
-        ->rawColumns(['actions']) // Agar HTML di kolom "actions" tidak di-escape
-        ->make(true);
-
+            ->editColumn('start_time', function ($history) {
+                // Format tanggal menjadi lebih user-friendly
+                return Carbon::parse($history->start_time)->translatedFormat('l, d F Y H:i:s');
+            })
+            ->addColumn('actions', function ($history) {
+                // Tambahkan tombol untuk setiap baris
+                return '
+                    <a href="/admin/history/' . $history->id . '" class="btn btn-info btn-sm">Lihat Polyline</a>
+                    <form action="/admin/history/' . $history->id . '" method="POST" style="display:inline;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin ingin menghapus data ini?\')">Hapus</button>
+                    </form>
+                ';
+            })
+            ->rawColumns(['actions']) // Kolom actions berisi HTML, jangan di-escape
+            ->make(true);
     }
 
+    // Menyimpan data baru
     public function saveHistory(Request $request)
     {
-        $data = $request->all();
-        
-        // Cek apakah data dengan username dan start_time yang sama sudah ada
-        $existingTracking = History::where('username', $data['username'])
-                                    ->where('start_time', $data['start_time'])
-                                    ->first();
+        // Validasi input
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+            'polyline' => 'required|array',
+            'duration' => 'required|integer',
+            'distance' => 'required|numeric',
+            'start_time' => 'required|date'
+        ]);
+
+        // Cek duplikasi data
+        $existingTracking = History::where('username', $request->username)
+            ->where('start_time', $request->start_time)
+            ->first();
 
         if ($existingTracking) {
-            return response()->json(['message' => 'Data tracking sudah ada'], 100);
+            return response()->json(['message' => 'Data tracking sudah ada'], 400);
         }
 
-        // Jika tidak ada data duplikat, simpan data ke database
-        $trackingHistory = new History();
-        $trackingHistory->username = $data['username'];
-        $trackingHistory->company_name = $data['company_name'];
-        $trackingHistory->polyline = json_encode($data['polyline']);
-        $trackingHistory->duration = $data['duration'];
-        $trackingHistory->distance = $data['distance'];
+        // Simpan data
+        $trackingHistory = History::create([
+            'username' => $request->username,
+            'company_name' => $request->company_name,
+            'polyline' => json_encode($request->polyline),
+            'duration' => $request->duration,
+            'distance' => $request->distance,
+            'start_time' => Carbon::parse($request->start_time)->format('Y-m-d H:i:s'),
+        ]);
 
-        // Format start_time dengan Carbon
-        $trackingHistory->start_time = Carbon::parse($data['start_time'])->format('Y-m-d H:i:s');
-        
-        $trackingHistory->save();
-
-        return response()->json(['message' => 'History berhasil disimpan']);
+        return response()->json(['message' => 'History berhasil disimpan', 'data' => $trackingHistory], 201);
     }
 
-
+    // Menampilkan detail history
     public function show($id)
     {
-        // Ambil history berdasarkan ID
         $history = History::findOrFail($id);
-
-        // Pastikan polyline yang diambil dari database didekode dari JSON
         $history->polyline = json_decode($history->polyline);
 
-        // Kirim data ke view
         return view('history.show', compact('history'));
     }
 
+    // Menghapus data history
     public function destroy($id)
     {
         $history = History::findOrFail($id);
         $history->delete();
-        return redirect()->route('history.index')->with('success', 'History deleted successfully');
+
+        return redirect()->route('history.index')->with('success', 'History berhasil dihapus');
     }
 }

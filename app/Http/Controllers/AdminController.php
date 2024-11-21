@@ -3,7 +3,9 @@
 // app/Http/Controllers/AdminController.php
 namespace App\Http\Controllers;
 
+
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -104,11 +106,14 @@ class AdminController extends Controller
         return redirect()->route('user.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
+    
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
 
+        $user = User::findOrFail($id);
+        $user->delete(); // Data tidak akan terhapus secara permanen
+
+        
         return response()->json(['success' => 'Data pengguna berhasil dihapus.']);
     }
 

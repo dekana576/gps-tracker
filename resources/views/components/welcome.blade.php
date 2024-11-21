@@ -14,7 +14,7 @@
                     <h2 class="ml-4 text-lg font-semibold text-blue-600">List User</h2>
                 </div>
                 <p class="mt-2 text-sm text-gray-600">Kelola daftar pengguna di aplikasi Anda.</p>
-                <a href="/users" class="block mt-4">
+                <a href="{{ route('user.index') }}" class="block mt-4">
                     <button class="w-full bg-blue-100 text-black py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
                         Lihat Detail
                     </button>
@@ -30,7 +30,7 @@
                     <h2 class="ml-4 text-lg font-semibold text-blue-600">Data Tracking</h2>
                 </div>
                 <p class="mt-2 text-sm text-gray-600">Pantau data aktivitas pengguna secara real-time.</p>
-                <a href="/tracking" class="block mt-4">
+                <a href="{{ route('history.index') }}" class="block mt-4">
                     <button class="w-full bg-blue-100 text-black py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
                         Lihat Detail
                     </button>
@@ -46,7 +46,7 @@
                     <h2 class="ml-4 text-lg font-semibold text-blue-600">Download Laporan</h2>
                 </div>
                 <p class="mt-2 text-sm text-gray-600">Unduh laporan dalam format PDF atau Excel.</p>
-                <a href="/laporan" class="block mt-4">
+                <a href="{{ route('reports.index') }}" class="block mt-4">
                     <button class="w-full bg-blue-100 text-black py-2 px-4 rounded hover:bg-blue-600 transition duration-300">
                         Lihat Detail
                     </button>
