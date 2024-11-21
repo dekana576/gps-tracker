@@ -18,17 +18,17 @@
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('user.index') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('User') }}
+                        {{ __('List User') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('history.index') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Data Tracking') }}
+                        {{ __('History Tracking') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('reports.index') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Laporan') }}
+                        {{ __('Download Laporan') }}
                     </x-nav-link>
                 </div>
             </div>

@@ -64,19 +64,38 @@ class HistoriesExport implements FromCollection, WithHeadings, WithMapping, With
         $sheet->getColumnDimension('F')->setWidth(20); // Kolom "Start Time"
 
         // Styling header
-        return [
-            // Styling seluruh header
-            1 => [
-                'font' => ['bold' => true, 'size' => 12], // Ukuran font lebih kecil
-                'fill' => [
-                    'fillType' => 'solid',
-                    'color' => ['rgb' => 'ADD8E6'], // Warna biru muda
-                ],
-                'alignment' => [
-                    'horizontal' => 'center',
-                    'vertical' => 'center',
+        $sheet->getStyle('A1:F1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+                'color' => ['rgb' => 'FFFFFF'], // White font color
+            ],
+            'fill' => [
+                'fillType' => 'solid',
+                'color' => ['rgb' => '0070C0'], // Dark blue background
+            ],
+            'alignment' => [
+                'horizontal' => 'center',
+                'vertical' => 'center',
+            ],
+        ]);
+
+        // Add borders to all cells
+        $sheet->getStyle('A1:F' . (count($this->collection()) + 1))->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000'], // Black border
                 ],
             ],
-        ];
+        ]);
+
+        // Center align all data
+        $sheet->getStyle('A2:F' . (count($this->collection()) + 1))->applyFromArray([
+            'alignment' => [
+                'horizontal' => 'center',
+                'vertical' => 'center',
+            ],
+        ]);
     }
 }

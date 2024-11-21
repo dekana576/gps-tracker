@@ -54,7 +54,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
             $user->id,
             $user->name,
             $user->company_name,
-            $user->total_distance,
+            number_format($user->total_distance, 2), // Format total distance to 2 decimal places
             $totalDuration,
         ];
     }
@@ -66,24 +66,44 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     {
         // Menyesuaikan ukuran kolom secara manual
         $sheet->getColumnDimension('A')->setWidth(5);  // Kolom "No"
-        $sheet->getColumnDimension('B')->setWidth(20); // Kolom "Name"
-        $sheet->getColumnDimension('C')->setWidth(25); // Kolom "Company Name"
-        $sheet->getColumnDimension('D')->setWidth(20); // Kolom "Total Distance"
-        $sheet->getColumnDimension('E')->setWidth(20); // Kolom "Total Duration"
+        $sheet->getColumnDimension('B')->setWidth(25); // Kolom "Name"
+        $sheet->getColumnDimension('C')->setWidth(30); // Kolom "Company Name"
+        $sheet->getColumnDimension('D')->setWidth(25); // Kolom "Total Distance"
+        $sheet->getColumnDimension('E')->setWidth(25); // Kolom "Total Duration"
 
         // Styling header
-        return [
-            1 => [
-                'font' => ['bold' => true, 'size' => 12],
-                'fill' => [
-                    'fillType' => 'solid',
-                    'color' => ['rgb' => 'ADD8E6'],
-                ],
-                'alignment' => [
-                    'horizontal' => 'center',
-                    'vertical' => 'center',
+        $sheet->getStyle('A1:E1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+                'color' => ['rgb' => 'FFFFFF'], // White font color
+            ],
+            'fill' => [
+                'fillType' => 'solid',
+                'color' => ['rgb' => '0070C0'], // Dark blue background
+            ],
+            'alignment' => [
+                'horizontal' => 'center',
+                'vertical' => 'center',
+            ],
+        ]);
+
+        // Add borders to all cells
+        $sheet->getStyle('A1:E' . (count($this->collection()) + 1))->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000'], // Black border
                 ],
             ],
-        ];
+        ]);
+
+        // Center align all data
+        $sheet->getStyle('A2:E' . (count($this->collection()) + 1))->applyFromArray([
+            'alignment' => [
+                'horizontal' => 'center',
+                'vertical' => 'center',
+            ],
+        ]);
     }
 }

@@ -91,6 +91,10 @@
                 $.ajax({
                     url: `/users/${userId}`, // Ganti URL sesuai route
                     type: 'DELETE',
+                    headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                        },
+
                     success: function(result) {
                         alert('User berhasil dihapus!');
                         $('#userTable').DataTable().ajax.reload(); // Refresh tabel
