@@ -145,14 +145,13 @@
 
     <div class="container mt-3">
         <div id="map"></div>
-
-        <div class="mt-3 d-flex flex-column d-flex-row gap-2">
+    
+        <div class="mt-3 d-flex flex-row gap-2">
             <button id="startTracking" class="btn btn-success">Mulai Pelacakan</button>
             <button id="stopTracking" class="btn btn-danger" disabled>Stop Pelacakan</button>
-            <a href="{{ route('history.index') }}" class="btn btn-primary">Lihat History</a>
         </div>
     </div>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 Astra On The Go. All Rights Reserved.</p>
