@@ -13,7 +13,6 @@
         align-items: center;
         position: relative;
         color: white; /* Untuk teks agar terlihat di atas gambar */
-        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Tambahkan bayangan pada teks */
     }
 
     /* CSS untuk membuat konten transparan */
