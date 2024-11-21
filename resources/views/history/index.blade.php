@@ -26,15 +26,6 @@
                                 placeholder="Pilih tanggal"
                             />
                         </div>
-                        <div class="w-1/3">
-                            <label for="tableSearch" class="sr-only">Cari:</label>
-                            <input 
-                                type="search" 
-                                class="border rounded p-2 w-full" 
-                                id="tableSearch" 
-                                placeholder="Cari data..."
-                            />
-                        </div>
                     </div>
 
                     <table id="historiesTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
@@ -72,7 +63,7 @@
                 var table = $('#historiesTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    searching: false, // Menonaktifkan pencarian bawaan DataTables
+                    searching: true, 
                     ajax: {
                         url: "{{ route('admin.histories') }}",
                         data: function (d) {
