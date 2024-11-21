@@ -136,10 +136,9 @@
             <div id="map"></div>
         </div>
 
-        <div class="mt-4 buttons-container">
-            <button id="startTracking" class="btn btn-success">Mulai Pelacakan</button>
-            <button id="stopTracking" class="btn btn-danger" disabled>Stop Pelacakan</button>
-            <a href="{{ route('history.index') }}" class="btn btn-primary">Lihat History</a>
+        <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
+            <button id="startTracking" class="btn btn-success">Start Tracking</button>
+            <button id="stopTracking" class="btn btn-danger" disabled>Stop Tracking</button>
         </div>
     </div>
 
@@ -153,7 +152,7 @@
 
     <script>
         let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
-        let polyline = L.polyline([]).addTo(map);
+        let polyline;
         let marker;
         let tracking = false;
         let startTime;
@@ -162,17 +161,27 @@
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
         let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
         let user_id = "{{ Auth::check() ? Auth::user()->id : '' }}";
-
+    
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
-
+    
+        // Fungsi untuk menghasilkan warna acak
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        }
+    
         document.getElementById('startTracking').addEventListener('click', function () {
             tracking = true;
             startTime = new Date();
             this.disabled = true;
             document.getElementById('stopTracking').disabled = false;
-
+    
+            // Pilih warna acak untuk polyline baru
+            const color = getRandomColor();
+            polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
+            positions = []; // Reset posisi
+    
             interval = setInterval(() => {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function (position) {
@@ -186,17 +195,17 @@
                 }
             }, 1000);
         });
-
+    
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
             clearInterval(interval);
-
+    
             const endTime = new Date();
             const duration = (endTime - startTime) / 1000;
             const distance = calculateDistance(positions);
-
+    
             fetch('/save-history', {
                 method: 'POST',
                 headers: {
@@ -206,7 +215,7 @@
                 body: JSON.stringify({ polyline: positions, duration, distance, startTime, username, company, user_id })
             }).then(response => response.json()).then(data => alert('History berhasil disimpan'));
         });
-
+    
         function calculateDistance(positions) {
             let totalDistance = 0;
             for (let i = 1; i < positions.length; i++) {
@@ -217,6 +226,7 @@
             return totalDistance / 1000;
         }
     </script>
+    
 </body>
 
 </html>
