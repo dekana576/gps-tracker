@@ -88,49 +88,90 @@
         }
 
         /* Button Styles */
-        .buttons-container button,
-        .buttons-container a {
-            width: 100%;
-            margin-bottom: 10px;
-            font-size: 1rem;
-            padding: 10px 15px;
+        #startTracking,
+#stopTracking {
+    width: 150px; 
+    height: 150px; 
+    border-radius: 50%; 
+    font-size: 2rem; 
+    font-weight: bold;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    padding: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 1); 
+    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Start button */
+#startTracking {
+    background-color: #007bff; 
+    color: white; 
+}
+
+#startTracking:hover {
+    transform: scale(1.1);
+    background-color: #0056b3; 
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); 
+}
+
+#startTracking:active {
+    transform: scale(0.95); 
+    background-color: #004085;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+}
+
+/* Stop button */
+#stopTracking {
+    background-color: #d9534f; 
+    color: white; 
+}
+
+#stopTracking:hover {
+    transform: scale(1.1); 
+    background-color: #c9302c;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); 
+}
+
+#stopTracking:active {
+    transform: scale(0.95); 
+    background-color: #bd362f; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+}
+
+#stopTracking:disabled {
+    background-color: #d9534f; 
+    box-shadow: none; 
+    transform: none; 
+    cursor: not-allowed; 
+    opacity: 0.6;
+}
+
+
+
+
+        .stats-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
         }
 
-        .custom-hover {
-            transition: all 0.3s ease;
-            padding: 12px 20px;
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Pusatkan secara horizontal */
+            justify-content: center; /* Pusatkan secara vertikal */
+            text-align: center; /* Pastikan teks di dalam elemen terpusat */
+        }
+
+        .stat-item span:not(.stat-title) {
             font-size: 1rem;
-            border-radius: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .custom-hover:hover {
-            background-color: #0056b3;
-            color: white;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-            transform: scale(1.05);
-        }
-
-        .btn-danger.custom-hover {
-            background-color: #dc3545;
-        }
-
-        .btn-danger.custom-hover:hover {
-            background-color: #c82333;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            transform: translateY(-3px) scale(1.05);
-        }
-
-        .btn-danger:disabled.custom-hover {
-            background-color: #d9534f;
-            box-shadow: none;
-            transform: none;
-            cursor: not-allowed;
+            color: #007bff; /* Warna biru */
         }
 
         /* Footer */
@@ -187,9 +228,29 @@
             <div id="map"></div>
         </div>
 
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-title">Time</span>
+                <span id="time">00:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-title">Distance</span>
+                <span id="distance">0.0 km</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-title">Steps</span>
+                <span id="steps">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-title">Calories</span>
+                <span id="calories">0</span>
+            </div>
+        </div>
+
+
         <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
-            <button id="startTracking" class="btn btn-success custom-hover">Start Tracking</button>
-            <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop Tracking</button>
+            <button id="startTracking" class="btn btn-success custom-hover">Start</button>
+            <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop</button>
         </div>
     </div>
 
