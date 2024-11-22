@@ -5,11 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPS Tracker</title>
+
+    <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Custom Styles -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Mengimpor font DM Serif Text */
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Import custom font */
 
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -32,6 +38,7 @@
             }
         }
 
+        /* Navbar */
         .navbar {
             background-color: #ffff;
             color: #fff;
@@ -45,6 +52,7 @@
             border-radius: 20px;
         }
 
+        /* Welcome Container */
         .welcome-container {
             text-align: center;
             margin-top: 20px;
@@ -55,14 +63,14 @@
         }
 
         .welcome-container p {
-            font-size: 1.1rem; /* Smaller font for welcome and from */
+            font-size: 1.1rem;
             margin: 3px 0;
         }
 
         .username {
-            font-family: 'Roboto', sans-serif; /* Font untuk nama pengguna */
-            font-size: 1.2rem; /* Ukuran sedikit lebih besar */
-            font-weight: 500; /* Ketebalan sedang */
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
             color: #007bff;
         }
 
@@ -70,15 +78,16 @@
             font-family: 'Roboto', sans-serif;
             font-size: 1.2rem;
             font-weight: 500;
-            color: #28a745; /* Warna hijau */
+            color: #28a745;
         }
 
         .welcome-container hr {
-            border-top: 2px solid #007bff; /* Garis biru */
+            border-top: 2px solid #007bff;
             width: 50%;
             margin: 15px auto;
         }
 
+        /* Button Styles */
         .buttons-container button,
         .buttons-container a {
             width: 100%;
@@ -90,48 +99,41 @@
         }
 
         .custom-hover {
-    transition: all 0.3s ease; /* Smooth transition for all properties */
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: none;
-    background-color: #007bff; /* Default background color */
-    color: white; /* Text color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Default shadow */
-}
+            transition: all 0.3s ease;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-.custom-hover:hover {
-    background-color: #0056b3; /* Darker background on hover */
-    color: #fff; /* Keep text color white */
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
-    transform: scale(1.05); /* Slightly enlarge button */
-}
+        .custom-hover:hover {
+            background-color: #0056b3;
+            color: white;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
 
-.btn-danger.custom-hover {
-    transition: all 0.3s ease; /* Smooth transition for all properties */
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: none;
-    background-color: #dc3545; /* Default red background */
-    color: white; /* Text color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Default shadow */
-}
+        .btn-danger.custom-hover {
+            background-color: #dc3545;
+        }
 
-.btn-danger.custom-hover:hover {
-    background-color: #c82333; /* Darker red for hover */
-    color: white; /* Keep text color white */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* More pronounced shadow on hover */
-    transform: translateY(-3px) scale(1.05); /* Slightly raised and enlarged */
-}
+        .btn-danger.custom-hover:hover {
+            background-color: #c82333;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px) scale(1.05);
+        }
 
         .btn-danger:disabled.custom-hover {
-            background-color: #d9534f; /* Warna merah pucat saat disabled */
-            box-shadow: none; /* Tidak ada efek hover saat disabled */
+            background-color: #d9534f;
+            box-shadow: none;
             transform: none;
             cursor: not-allowed;
         }
 
+        /* Footer */
         .footer {
             background-color: #fff;
             color: #000;
@@ -175,7 +177,7 @@
     <!-- Main Content -->
     <div class="container mt-4">
         <div class="welcome-container">
-        <p style="font-size: 40px; font-family: 'DM Serif Text', serif; color: #000;">Astra On The Go</p>
+            <p style="font-size: 40px; font-family: 'DM Serif Text', serif; color: #000;">Astra On The Go</p>
             <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
             <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
             <hr>
@@ -189,15 +191,17 @@
             <button id="startTracking" class="btn btn-success custom-hover">Start Tracking</button>
             <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop Tracking</button>
         </div>
-    
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 Astra On The Go. All Rights Reserved.</p>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Custom JS -->
     <script>
         let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
         let polyline;
@@ -209,62 +213,79 @@
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
         let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
         let user_id = "{{ Auth::check() ? Auth::user()->id : '' }}";
-    
+
+        // Request permission for notifications if it's not already granted
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
-    
-        // Fungsi untuk menghasilkan warna acak
-        function getRandomColor() {
-            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-        }
-    
-        document.getElementById('startTracking').addEventListener('click', function () {
-    
-    tracking = true;
-    startTime = new Date();
-    this.disabled = true;
-    document.getElementById('stopTracking').disabled = false;
-    
-    // Pilih warna acak untuk polyline baru
-    const color = getRandomColor();
-    polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
-    positions = []; // Reset posisi
-    
-    let firstPosition = true; // Flag untuk zoom pertama kali
-    
-    interval = setInterval(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const latlng = [position.coords.latitude, position.coords.longitude];
-                positions.push(latlng);
-                polyline.addLatLng(latlng);
-                
-                if (marker) map.removeLayer(marker);
-                marker = L.marker(latlng).addTo(map);
 
-                // Zoom otomatis saat pertama kali mendapatkan posisi
-                if (firstPosition) {
-                    map.setView(latlng, 17); // Zoom level 16, bisa disesuaikan
-                    firstPosition = false; // Matikan flag agar zoom hanya terjadi sekali
-                } else {
-                    map.setView(latlng); // Pindahkan view ke posisi terbaru tanpa mengubah zoom
-                }
-            });
+        // Function to show notification
+        function showNotification(message) {
+            if (Notification.permission === 'granted') {
+                new Notification(message);
+            }
         }
-    }, 1000);
-});
-    
+
+        // Handle page visibility change
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden && tracking) {
+                showNotification("Tracking is running in the background");
+            }
+        });
+
+        document.getElementById('startTracking').addEventListener('click', function () {
+            tracking = true;
+            startTime = new Date();
+            this.disabled = true;
+            document.getElementById('stopTracking').disabled = false;
+
+            // Choose a random color for the polyline
+            const color = getRandomColor();
+            polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
+            positions = []; // Reset positions
+
+            let firstPosition = true;
+
+            interval = setInterval(() => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        const latlng = [position.coords.latitude, position.coords.longitude];
+                        positions.push(latlng);
+                        polyline.addLatLng(latlng);
+
+                        if (marker) map.removeLayer(marker);
+                        marker = L.marker(latlng).addTo(map);
+
+                        // Zoom in on the first position
+                        if (firstPosition) {
+                            map.setView(latlng, 17);
+                            firstPosition = false;
+                        } else {
+                            map.setView(latlng);
+                        }
+                    });
+                }
+            }, 1000);
+
+            // Show notification when tracking starts
+            showNotification("Tracking has started");
+        });
+
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
             clearInterval(interval);
-    
+
             const endTime = new Date();
             const duration = (endTime - startTime) / 1000;
             const distance = calculateDistance(positions);
-    
+
+            // Send data to server
             fetch('/save-history', {
                 method: 'POST',
                 headers: {
@@ -273,8 +294,11 @@
                 },
                 body: JSON.stringify({ polyline: positions, duration, distance, startTime, username, company, user_id })
             }).then(response => response.json()).then(data => alert('History berhasil disimpan'));
+
+            // Show notification when tracking stops
+            showNotification("Tracking has stopped");
         });
-    
+
         function calculateDistance(positions) {
             let totalDistance = 0;
             for (let i = 1; i < positions.length; i++) {
@@ -282,10 +306,15 @@
                 const latlng2 = L.latLng(positions[i]);
                 totalDistance += latlng1.distanceTo(latlng2);
             }
-            return totalDistance / 1000;
+            return totalDistance / 1000; // in kilometers
+        }
+
+        // Function for random colors
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
     </script>
-    
+
 </body>
 
 </html>
