@@ -220,29 +220,40 @@
         }
     
         document.getElementById('startTracking').addEventListener('click', function () {
-            tracking = true;
-            startTime = new Date();
-            this.disabled = true;
-            document.getElementById('stopTracking').disabled = false;
     
-            // Pilih warna acak untuk polyline baru
-            const color = getRandomColor();
-            polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
-            positions = []; // Reset posisi
+    tracking = true;
+    startTime = new Date();
+    this.disabled = true;
+    document.getElementById('stopTracking').disabled = false;
     
-            interval = setInterval(() => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        const latlng = [position.coords.latitude, position.coords.longitude];
-                        positions.push(latlng);
-                        polyline.addLatLng(latlng);
-                        if (marker) map.removeLayer(marker);
-                        marker = L.marker(latlng).addTo(map);
-                        map.setView(latlng, 15);
-                    });
+    // Pilih warna acak untuk polyline baru
+    const color = getRandomColor();
+    polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
+    positions = []; // Reset posisi
+    
+    let firstPosition = true; // Flag untuk zoom pertama kali
+    
+    interval = setInterval(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const latlng = [position.coords.latitude, position.coords.longitude];
+                positions.push(latlng);
+                polyline.addLatLng(latlng);
+                
+                if (marker) map.removeLayer(marker);
+                marker = L.marker(latlng).addTo(map);
+
+                // Zoom otomatis saat pertama kali mendapatkan posisi
+                if (firstPosition) {
+                    map.setView(latlng, 17); // Zoom level 16, bisa disesuaikan
+                    firstPosition = false; // Matikan flag agar zoom hanya terjadi sekali
+                } else {
+                    map.setView(latlng); // Pindahkan view ke posisi terbaru tanpa mengubah zoom
                 }
-            }, 1000);
-        });
+            });
+        }
+    }, 1000);
+});
     
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
