@@ -1,5 +1,5 @@
 <x-app-layout>
-<!DOCTYPE html>
+    <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -17,96 +17,102 @@
                     <table id="userTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
                         <thead class="bg-blue-500 text-white">
                             <tr>
-                                <tr>
-                                    <th class="px-4 py-2 border">ID</th>
-                                    <th class="px-4 py-2 border">Username</th>
-                                    <th class="px-4 py-2 border">Perusahaan</th>
-                                    <th class="px-4 py-2 border">Total Jarak (km)</th>
-                                    <th class="px-4 py-2 border">Total Durasi</th>
-                                    <th class="px-4 py-2 border">Aksi</th>
-                                </tr>
+                                <th class="px-4 py-2 border">No</th>
+                                <th class="px-4 py-2 border">ID</th>
+                                <th class="px-4 py-2 border">Username</th>
+                                <th class="px-4 py-2 border">Perusahaan</th>
+                                <th class="px-4 py-2 border">Total Jarak (km)</th>
+                                <th class="px-4 py-2 border">Total Durasi</th>
+                                <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
                             <!-- DataTables akan mengisi ini -->
                         </tbody>
                     </table>
-
-                
                 </div>
             </div>
         </div>
-
-
-
-    <!-- Tambahkan jQuery dan DataTables -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
-    <script>
-        $(document).ready(function() {
-            $('#userTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('user.histories') }}",
-                columns: [
-                    { data: 'id' },
-                    { data: 'name' },
-                    { data: 'company_name' },
-                    { data: 'total_distance', render: function(data, type, row) {
-                        return parseFloat(data).toFixed(2); // Format ke 2 desimal
-                    }},
-                    { data: 'total_duration' },
-                    { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
-                ],
-                language: {
-                    "processing": "Loading...",
-                    "lengthMenu": "Tampilkan _MENU_ entri per halaman",
-                    "zeroRecords": "Tidak ada data ditemukan",
-                    "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
-                    "infoEmpty": "Tidak ada entri tersedia",
-                    "infoFiltered": "(disaring dari _MAX_ total entri)",
-                    "search": "Cari:",
-                    "paginate": {
-                        "first": "Pertama",
-                        "last": "Terakhir",
-                        "next": "Berikutnya",
-                        "previous": "Sebelumnya"
-                    }
-                }
-            });
-
-        });
-        $(document).on('click', '.edit-btn', function() {
-            const userId = $(this).data('id');
-            alert('Edit user dengan ID: ' + userId);
-            // Redirect ke halaman edit atau buka modal
-            window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route
-        });
-
-        $(document).on('click', '.delete-btn', function() {
-            const userId = $(this).data('id');
-            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                $.ajax({
-                    url: `/users/${userId}`, // Ganti URL sesuai route
-                    type: 'DELETE',
-                    headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
+    
+        <!-- Tambahkan jQuery dan DataTables -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    
+        <script>
+            $(document).ready(function() {
+                $('#userTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('user.histories') }}",
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
+                            }
                         },
-
-                    success: function(result) {
-                        alert('User berhasil dihapus!');
-                        $('#userTable').DataTable().ajax.reload(); // Refresh tabel
-                    },
-                    error: function(err) {
-                        alert('Terjadi kesalahan saat menghapus user.');
+                        { data: 'id' },
+                        { data: 'name' },
+                        { data: 'company_name' },
+                        { 
+                            data: 'total_distance', 
+                            render: function(data) {
+                                return parseFloat(data).toFixed(2) + ' km'; // Format ke 2 desimal
+                            }
+                        },
+                        { data: 'total_duration' },
+                        { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
+                    ],
+                    language: {
+                        "processing": "Loading...",
+                        "lengthMenu": "Tampilkan _MENU_ entri per halaman",
+                        "zeroRecords": "Tidak ada data ditemukan",
+                        "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
+                        "infoEmpty": "Tidak ada entri tersedia",
+                        "infoFiltered": "(disaring dari _MAX_ total entri)",
+                        "search": "Cari:",
+                        "paginate": {
+                            "first": "Pertama",
+                            "last": "Terakhir",
+                            "next": "Berikutnya",
+                            "previous": "Sebelumnya"
+                        }
                     }
                 });
-            }
-        });
-
-    </script>
-</body>
-</html>
-</x-app-layout>
+    
+            });
+    
+            // Fungsi untuk mengedit data
+            $(document).on('click', '.edit-btn', function() {
+                const userId = $(this).data('id');
+                alert('Edit user dengan ID: ' + userId);
+                window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route
+            });
+    
+            // Fungsi untuk menghapus data
+            $(document).on('click', '.delete-btn', function() {
+                const userId = $(this).data('id');
+                if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                    $.ajax({
+                        url: `/users/${userId}`, // Ganti URL sesuai route
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                        },
+                        success: function(result) {
+                            alert('User berhasil dihapus!');
+                            $('#userTable').DataTable().ajax.reload(); // Refresh tabel
+                        },
+                        error: function(err) {
+                            alert('Terjadi kesalahan saat menghapus user.');
+                        }
+                    });
+                }
+            });
+    
+        </script>
+    </body>
+    </html>
+    </x-app-layout>
+    
