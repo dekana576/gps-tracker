@@ -17,7 +17,7 @@ class HistoriesExport implements FromCollection, WithHeadings, WithMapping, With
      */
     public function collection()
     {
-        return History::select('id', 'username', 'company_name', 'distance', 'duration', 'start_time')->get();
+        return History::select('username', 'company_name', 'distance', 'duration', 'start_time')->get();
     }
 
     /**
@@ -40,8 +40,11 @@ class HistoriesExport implements FromCollection, WithHeadings, WithMapping, With
      */
     public function map($history): array
     {
+        static $rowNumber = 1;
+
+
         return [
-            $history->id,
+            $rowNumber++,
             $history->username,
             $history->company_name,
             number_format($history->distance, 2), // Format angka desimal

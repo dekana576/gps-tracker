@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Exports;
 
 use App\Models\User;
@@ -35,6 +36,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     {
         return [
             'No',
+            'ID',
             'Name',
             'Company Name',
             'Total Distance (km)',
@@ -47,10 +49,13 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
      */
     public function map($user): array
     {
+        static $rowNumber = 1; // Inisialisasi nomor urut
+
         // Mengambil total_duration yang dihitung
         $totalDuration = $user->histories->first() ? $user->histories->first()->total_duration : '00:00:00';
 
         return [
+            $rowNumber++,   // Nomor urut
             $user->id,
             $user->name,
             $user->company_name,
@@ -66,13 +71,14 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     {
         // Menyesuaikan ukuran kolom secara manual
         $sheet->getColumnDimension('A')->setWidth(5);  // Kolom "No"
-        $sheet->getColumnDimension('B')->setWidth(25); // Kolom "Name"
-        $sheet->getColumnDimension('C')->setWidth(30); // Kolom "Company Name"
-        $sheet->getColumnDimension('D')->setWidth(25); // Kolom "Total Distance"
-        $sheet->getColumnDimension('E')->setWidth(25); // Kolom "Total Duration"
+        $sheet->getColumnDimension('B')->setWidth(10); // Kolom "ID"
+        $sheet->getColumnDimension('C')->setWidth(25); // Kolom "Name"
+        $sheet->getColumnDimension('D')->setWidth(30); // Kolom "Company Name"
+        $sheet->getColumnDimension('E')->setWidth(25); // Kolom "Total Distance"
+        $sheet->getColumnDimension('F')->setWidth(25); // Kolom "Total Duration"
 
         // Styling header
-        $sheet->getStyle('A1:E1')->applyFromArray([
+        $sheet->getStyle('A1:F1')->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 12,
@@ -89,7 +95,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
         ]);
 
         // Add borders to all cells
-        $sheet->getStyle('A1:E' . (count($this->collection()) + 1))->applyFromArray([
+        $sheet->getStyle('A1:F' . (count($this->collection()) + 1))->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -99,7 +105,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
         ]);
 
         // Center align all data
-        $sheet->getStyle('A2:E' . (count($this->collection()) + 1))->applyFromArray([
+        $sheet->getStyle('A2:F' . (count($this->collection()) + 1))->applyFromArray([
             'alignment' => [
                 'horizontal' => 'center',
                 'vertical' => 'center',
