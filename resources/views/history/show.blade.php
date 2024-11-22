@@ -13,18 +13,26 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-8">
                 <div class="container mx-auto px-4 py-8">
-                    <h2 class="text-2xl font-bold text-center text-blue-500 mb-6">
+                    <div>
+                        <a href="{{ route('history.index') }}" 
+                           class="bg-blue-500 text-white px-5 py-3 rounded-lg font-semibold hover:bg-blue-600">
+                            Back
+                        </a>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-center text-blue-500 mb-6">
                         Detail Polyline Pelacakan
                     </h2>
                     
-                    <div id="map" class="h-96 rounded-lg shadow-lg border border-gray-300"></div>
-                    
-                    <div class="mt-6 text-center">
-                        <a href="{{ route('history.index') }}" 
-                           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Kembali ke Riwayat
-                        </a>
+                    <div class="flex justify-around my-6 mb-7 pt-14">
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-blue-300 to-blue-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-person-running"></i> {{($history->distance)}} Km</span></p>
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-red-300 to-red-500 rounded-lg shadow-lg text-white"><i class="fa-regular fa-clock"></i> {{($history->duration)}}</span></p>
                     </div>
+                    <div id="map" class="rounded-3xl h-96 shadow-lg border border-gray-300"></div>
+                    <div class="my-6 mb-7 ">
+                        <p class="font-bold text-2xl text-center">{{($history->username)}}</p>
+                        <p class="text-center">{{($history->company_name)}}</p>
+                    </div>
+                    
                 </div>
             </div>
         </div>

@@ -14,16 +14,16 @@
                 <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
                     <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Data User dan Riwayat GPS</h2>
                     
-                    <table id="userTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
+                    <table id="userTable" class="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-sm">
                         <thead class="bg-blue-500 text-white">
                             <tr>
-                                <th class="px-4 py-2 border">No</th>
-                                <th class="px-4 py-2 border">ID</th>
-                                <th class="px-4 py-2 border">Username</th>
-                                <th class="px-4 py-2 border">Perusahaan</th>
-                                <th class="px-4 py-2 border">Total Jarak (km)</th>
-                                <th class="px-4 py-2 border">Total Durasi</th>
-                                <th class="px-4 py-2 border">Aksi</th>
+                                <th class="px-4 py-2 border border-gray-300">No</th>
+                                <th class="px-4 py-2 border border-gray-300">ID</th>
+                                <th class="px-4 py-2 border border-gray-300">Username</th>
+                                <th class="px-4 py-2 border border-gray-300">Perusahaan</th>
+                                <th class="px-4 py-2 border border-gray-300">Total Jarak (km)</th>
+                                <th class="px-4 py-2 border border-gray-300">Total Durasi</th>
+                                <th class="px-4 py-2 border border-gray-300">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
@@ -36,8 +36,8 @@
     
         <!-- Tambahkan jQuery dan DataTables -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     
         <script>
             $(document).ready(function() {
@@ -78,6 +78,14 @@
                             "next": "Berikutnya",
                             "previous": "Sebelumnya"
                         }
+                    },
+                    // Tambahkan rowCallback untuk styling baris tabel
+                    rowCallback: function(row, data, index){
+                        if (index % 2 === 0) {
+                            $(row).addClass('bg-gray-100'); // Baris ganjil dengan warna latar belakang berbeda
+                        }
+                        // Tambahkan kelas border ke setiap sel
+                        $('td', row).addClass('border border-gray-300');
                     }
                 });
     
@@ -114,5 +122,4 @@
         </script>
     </body>
     </html>
-    </x-app-layout>
-    
+</x-app-layout>

@@ -28,16 +28,16 @@
                         </div>
                     </div>
 
-                    <table id="historiesTable" class="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-sm">
-                        <thead class="bg-blue-500 text-white">
+                    <table id="historiesTable" class="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-sm">
+                        <thead class="bg-blue-500 text-white border border-gray-300">
                             <tr>
-                                <th class="px-4 py-2 border">NO</th>
-                                <th class="px-4 py-2 border">Username</th>
-                                <th class="px-4 py-2 border">Company Name</th>
-                                <th class="px-4 py-2 border">Distance (km)</th>
-                                <th class="px-4 py-2 border">Duration</th>
-                                <th class="px-4 py-2 border">Start Time</th>
-                                <th class="px-4 py-2 border">Actions</th>
+                                <th class="px-4 py-2 border border-gray-300">NO</th>
+                                <th class="px-4 py-2 border border-gray-300">Username</th>
+                                <th class="px-4 py-2 border border-gray-300">Company Name</th>
+                                <th class="px-4 py-2 border border-gray-300">Distance (km)</th>
+                                <th class="px-4 py-2 border border-gray-300">Duration</th>
+                                <th class="px-4 py-2 border border-gray-300">Start Time</th>
+                                <th class="px-4 py-2 border border-gray-300">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
@@ -61,63 +61,70 @@
 
                 // Initialize DataTable
                 var table = $('#historiesTable').DataTable({
-    processing: true,
-    serverSide: true,
-    searching: true, 
-    ajax: {
-        url: "{{ route('admin.histories') }}",
-        data: function (d) {
-            d.date = $('#dateFilter').val(); // Kirim filter tanggal ke server
-        }
-    },
-    columns: [
-        {
-            data: 'id',
-            name: 'id',
-            render: function (data, type, row, meta) {
-                // Hitung nomor urut berdasarkan halaman dan panjang halaman
-                return meta.row + meta.settings._iDisplayStart + 1;
-            }
-        },
-        { data: 'username', name: 'username' },
-        { data: 'company_name', name: 'company_name' },
-        { 
-            data: 'distance', 
-            name: 'distance', 
-            render: function (data) {
-                return `${parseFloat(data).toFixed(2)} km`;
-            }
-        },
-        { data: 'duration', name: 'duration' },
-        { data: 'start_time', name: 'start_time' },
-        {
-            data: 'id',
-            name: 'actions',
-            orderable: false,
-            searchable: false,
-            render: function (data, type, row) {
-                return `
-                    <div class="flex space-x-2 items-center">
-                        <a href="/admin/history/show/${data}" class="w-10 h-10 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </a>
-                        <form action="/admin/history/delete/${data}" method="POST" onsubmit="return confirmDelete(event, this);" class="w-10 h-10 flex items-center justify-center">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="w-full h-full bg-red-500 text-white rounded hover:bg-red-600">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
-                    </div>
-                `;
-            }
-        }
-    ],
-    language: {
-        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
-    }
-});
-
+                    processing: true,
+                    serverSide: true,
+                    searching: true, 
+                    ajax: {
+                        url: "{{ route('admin.histories') }}",
+                        data: function (d) {
+                            d.date = $('#dateFilter').val(); // Kirim filter tanggal ke server
+                        }
+                    },
+                    columns: [
+                        {
+                            data: 'id',
+                            name: 'id',
+                            render: function (data, type, row, meta) {
+                                // Hitung nomor urut berdasarkan halaman dan panjang halaman
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        { data: 'username', name: 'username' },
+                        { data: 'company_name', name: 'company_name' },
+                        { 
+                            data: 'distance', 
+                            name: 'distance', 
+                            render: function (data) {
+                                return `${parseFloat(data).toFixed(2)} km`;
+                            }
+                        },
+                        { data: 'duration', name: 'duration' },
+                        { data: 'start_time', name: 'start_time' },
+                        {
+                            data: 'id',
+                            name: 'actions',
+                            orderable: false,
+                            searchable: false,
+                            render: function (data, type, row) {
+                                return `
+                                    <div class="flex space-x-2 items-center">
+                                        <a href="/admin/history/show/${data}" class="w-10 h-10 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </a>
+                                        <form action="/admin/history/delete/${data}" method="POST" onsubmit="return confirmDelete(event, this);" class="w-10 h-10 flex items-center justify-center">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="w-full h-full bg-red-500 text-white rounded hover:bg-red-600">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ],
+                    // Untuk menerapkan styling garis dan belang-belang
+                    rowCallback: function(row, data, index){
+                        if (index % 2 === 0) {
+                            $(row).addClass('bg-gray-100'); // Baris ganjil dengan warna latar belakang berbeda
+                        }
+                        // Tambahkan kelas border ke setiap baris
+                        $('td', row).addClass('border border-gray-300');
+                    },
+                    language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                    }
+                });
 
                 // Event listener untuk filter tanggal
                 $('#dateFilter').on('change', function () {
