@@ -95,6 +95,6 @@ class HistoryController extends Controller
         $history = History::findOrFail($id);
         $history->delete();
 
-        return redirect()->route('history.index')->with('success', 'History berhasil dihapus');
+        return response()->json(['message' => 'Data berhasil dihapus!']);
     }
 }

@@ -128,6 +128,14 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
 }
 
+#startTracking:disabled {
+    background-color: #004085; 
+    box-shadow: none; 
+    transform: none; 
+    cursor: not-allowed; 
+    opacity: 0.6;
+}
+
 /* Stop button */
 #stopTracking {
     background: linear-gradient(90deg, #fe8585,  #f35555);; 
