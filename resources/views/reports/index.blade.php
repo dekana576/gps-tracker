@@ -35,7 +35,7 @@
 
             <!-- Decorative Footer -->
             <div class="text-center mt-12">
-                <p class="text-gray-500 text-sm">© 2024 Sistem Informasi Anda. All rights reserved.</p>
+                <p class="text-gray-500 text-sm"> 2024 Astra On The Go. All Rights Reserved.</p>
             </div>
         </div>
     </body>
