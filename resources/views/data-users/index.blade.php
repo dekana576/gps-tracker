@@ -5,7 +5,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Riwayat Pelacakan GPS</title>
+
+        <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com"></script>
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- DataTables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     </head>
     <body class="bg-gray-100 font-sans antialiased">
@@ -13,7 +18,7 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-8">
                 <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
                     <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Data User dan Riwayat GPS</h2>
-                    
+
                     <table id="userTable" class="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-sm">
                         <thead class="bg-blue-500 text-white">
                             <tr>
@@ -33,12 +38,11 @@
                 </div>
             </div>
         </div>
-    
-        <!-- Tambahkan jQuery dan DataTables -->
+
+        <!-- jQuery dan DataTables JS -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    
+
         <script>
             $(document).ready(function() {
                 $('#userTable').DataTable({
@@ -55,8 +59,8 @@
                         { data: 'id' },
                         { data: 'name' },
                         { data: 'company_name' },
-                        { 
-                            data: 'total_distance', 
+                        {
+                            data: 'total_distance',
                             render: function(data) {
                                 return parseFloat(data).toFixed(2) + ' km'; // Format ke 2 desimal
                             }
@@ -65,60 +69,96 @@
                         { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
                     ],
                     language: {
-                        "processing": "Loading...",
-                        "lengthMenu": "Tampilkan _MENU_ entri per halaman",
-                        "zeroRecords": "Tidak ada data ditemukan",
-                        "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
-                        "infoEmpty": "Tidak ada entri tersedia",
-                        "infoFiltered": "(disaring dari _MAX_ total entri)",
-                        "search": "Cari:",
-                        "paginate": {
-                            "first": "Pertama",
-                            "last": "Terakhir",
-                            "next": "Berikutnya",
-                            "previous": "Sebelumnya"
+                        processing: "Loading...",
+                        lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                        zeroRecords: "Tidak ada data ditemukan",
+                        info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
+                        infoEmpty: "Tidak ada entri tersedia",
+                        infoFiltered: "(disaring dari _MAX_ total entri)",
+                        search: "Cari:",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Berikutnya",
+                            previous: "Sebelumnya"
                         }
                     },
-                    // Tambahkan rowCallback untuk styling baris tabel
-                    rowCallback: function(row, data, index){
+                    rowCallback: function(row, data, index) {
                         if (index % 2 === 0) {
                             $(row).addClass('bg-gray-100'); // Baris ganjil dengan warna latar belakang berbeda
                         }
-                        // Tambahkan kelas border ke setiap sel
                         $('td', row).addClass('border border-gray-300');
                     }
                 });
-    
-            });
-    
-            // Fungsi untuk mengedit data
-            $(document).on('click', '.edit-btn', function() {
-                const userId = $(this).data('id');
-                alert('Edit user dengan ID: ' + userId);
-                window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route
-            });
-    
-            // Fungsi untuk menghapus data
-            $(document).on('click', '.delete-btn', function() {
-                const userId = $(this).data('id');
-                if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                    $.ajax({
-                        url: `/users/${userId}`, // Ganti URL sesuai route
-                        type: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
-                        },
-                        success: function(result) {
-                            alert('User berhasil dihapus!');
-                            $('#userTable').DataTable().ajax.reload(); // Refresh tabel
-                        },
-                        error: function(err) {
-                            alert('Terjadi kesalahan saat menghapus user.');
+
+                // Fungsi untuk mengedit data
+                $(document).on('click', '.edit-btn', function() {
+                    const userId = $(this).data('id');
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Anda akan mengedit data user ini!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, edit!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire(
+                                'Diedit!',
+                                'User dengan ID ' + userId + ' akan diedit.',
+                                'success'
+                            ).then(() => {
+                                window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route edit
+                            });
                         }
                     });
-                }
+                });
+
+                // Fungsi untuk menghapus data
+                $(document).on('click', '.delete-btn', function() {
+                    const userId = $(this).data('id');
+
+                    // Tampilkan dialog konfirmasi SweetAlert2 untuk penghapusan data
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data yang dihapus tidak bisa dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Lakukan penghapusan data via AJAX
+                            $.ajax({
+                                url: `/users/${userId}`, // Ganti URL sesuai route penghapusan
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                                },
+                                success: function(result) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'User berhasil dihapus.',
+                                        'success'
+                                    );
+                                    $('#userTable').DataTable().ajax.reload(); // Refresh tabel setelah penghapusan
+                                },
+                                error: function(err) {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Terjadi kesalahan saat menghapus user.',
+                                        'error'
+                                    );
+                                }
+                            });
+                        }
+                    });
+                });
             });
-    
         </script>
     </body>
     </html>
