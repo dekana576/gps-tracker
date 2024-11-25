@@ -15,6 +15,8 @@ class TrackingController extends Controller
         $history->username = $request->username;
         $history->company_name = $request->company;
         $history->distance = $request->distance;
+        $history->steps = $request->steps;
+        $history->calori = $request->calori;
         $history->duration = gmdate("H:i:s", $request->duration);
         $history->start_time = Carbon::parse($request->startTime)->timezone('Asia/Makassar');
         $history->polyline = json_encode($request->polyline);
