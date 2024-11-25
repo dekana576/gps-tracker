@@ -59,7 +59,7 @@
     <!-- Footer Content -->
     <footer class="bg-blue-100 text-black py-6">
         <div class="container mx-auto text-center">
-            <p>&copy; 2024 Astra On The Go. All Rights Reserved.</p>
+            <p>&copy; 2024 WALK-A. All Rights Reserved.</p>
         </div>
     </footer>
 </div>
