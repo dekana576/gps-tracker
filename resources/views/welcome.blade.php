@@ -13,6 +13,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Custom Styles -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Import custom font */
@@ -382,23 +385,48 @@
     
             // Send only polyline, duration, and distance data to server
             fetch('/save-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ 
-                    polyline: positions, 
-                    duration, 
-                    distance: totalDistance, 
-                    startTime, 
-                    username, 
-                    company, 
-                    calori: totalCalories,
-                    steps: totalSteps,
-                    user_id 
-                })
-            }).then(response => response.json()).then(data => alert('History berhasil disimpan'));
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    },
+    body: JSON.stringify({ 
+        polyline: positions, 
+        duration, 
+        distance: totalDistance, 
+        startTime, 
+        username, 
+        company, 
+        calori: totalCalories,
+        steps: totalSteps,
+        user_id 
+    })
+})
+.then(response => response.json())
+.then(data => {
+    // Tampilkan notifikasi sukses menggunakan SweetAlert
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'History berhasil disimpan.',
+        confirmButtonText: 'OK',
+        timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
+        timerProgressBar: true,
+        position: 'top-end', // Posisi toast di pojok kanan atas
+        toast: true,
+        showCloseButton: true // Tambahkan tombol close
+    });
+})
+.catch(error => {
+    // Tampilkan notifikasi error jika terjadi kesalahan
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
+        confirmButtonText: 'OK'
+    });
+});
+
         });
     
         function calculateDistance(positions) {
