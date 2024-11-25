@@ -20,6 +20,8 @@ class History extends Model
         'duration',
         'start_time',
         'polyline',
+        'steps',
+        'calori',
     ];
 
     /**

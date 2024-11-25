@@ -393,6 +393,8 @@
                     startTime, 
                     username, 
                     company, 
+                    calori: totalCalories,
+                    steps: totalSteps,
                     user_id 
                 })
             }).then(response => response.json()).then(data => alert('History berhasil disimpan'));

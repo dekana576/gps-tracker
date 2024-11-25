@@ -55,6 +55,8 @@ class HistoryController extends Controller
             'polyline' => 'required|array',
             'duration' => 'required|integer',
             'distance' => 'required|numeric',
+            'steps' => 'required|numeric',
+            'calori' => 'required|numeric',
             'start_time' => 'required|date'
         ]);
 
@@ -74,6 +76,8 @@ class HistoryController extends Controller
             'polyline' => json_encode($request->polyline),
             'duration' => $request->duration,
             'distance' => $request->distance,
+            'steps' => $request->totalSteps,
+            'calori' => $request->totalCalories,
             'start_time' => Carbon::parse($request->start_time)->format('Y-m-d H:i:s'),
         ]);
 
