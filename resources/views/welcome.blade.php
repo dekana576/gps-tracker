@@ -16,6 +16,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
     <!-- Custom Styles -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Import custom font */
@@ -201,6 +206,40 @@
             margin-top: 20px;
             font-size: 0.9rem;
         }
+
+        .table {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0.5rem 0.8rem;
+        margin: 0 2px;
+        border-radius: 5px;
+        background: #333;
+        color: #fff !important;
+        border: none;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #007bff;
+        color: #fff !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: #007bff;
+        color: #fff !important;
+        font-weight: bold;
+    }
     </style>
 </head>
 
@@ -208,71 +247,106 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <div class="navbar-brand">
-                <img src="images/astra.png" alt="Logo Astra">
-                <img src="images/best.png" alt="Logo Best">
+            <!-- Brand -->
+            <div class="d-flex align-items-center">
+                <div class="navbar-brand d-flex align-items-center" id="backToMain">
+                    <img src="images/astra.png" alt="Logo Astra" style="height: 40px; margin-right: 10px;">
+                    <img src="images/best.png" alt="Logo Best" style="height: 40px;">
+                </div>
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    
+            <!-- Navbar Menu -->
+            <div class="collapse navbar-collapse justify-content-center text-center" id="navbarNav">
                 <ul class="navbar-nav">
-                    @if(Auth::check())
                     <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
+                        <a href="javascript:void(0);" id="homeButton" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Home</a>
                     </li>
-                    @endif
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" id="viewHistory" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Profile</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-
+    
     <!-- Main Content -->
-    <div class="container mt-4">
-        <div class="welcome-container">
-            <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000;">W A L K - A</p>
-
-            <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
-            <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
-            <hr>
-        </div>
-
-        <div class="mt-4">
-            <div id="map"></div>
-        </div>
-
-        <div class="stats-container">
-            <div class="stat-item">
-                <span class="stat-title">Time</span>
-                <span id="time">00:00</span>
+    <div id="mainContent">
+        <div class="container mt-4">
+            <div class="welcome-container">
+                <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000;">W A L K - A</p>
+                <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
+                <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
+                <hr>
             </div>
-            <div class="stat-item">
-                <span class="stat-title">Distance</span>
-                <span id="distance">0.0 km</span>
+    
+            <div class="mt-4">
+                <div id="map"></div>
             </div>
-            <div class="stat-item">
-                <span class="stat-title">Steps</span>
-                <span id="steps">0</span>
+    
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-title">Time</span>
+                    <span id="time">00:00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-title">Distance</span>
+                    <span id="distance">0.0 km</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-title">Steps</span>
+                    <span id="steps">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-title">Calories</span>
+                    <span id="calories">0</span>
+                </div>
             </div>
-            <div class="stat-item">
-                <span class="stat-title">Calories</span>
-                <span id="calories">0</span>
+    
+            <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
+                <button id="startTracking" class="btn btn-success custom-hover">Start</button>
+                <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop</button>
             </div>
-        </div>
-
-
-        <div class="mt-4 buttons-container gap-5 d-flex justify-content-around">
-            <button id="startTracking" class="btn btn-success custom-hover">Start</button>
-            <button id="stopTracking" class="btn btn-danger custom-hover" disabled>Stop</button>
         </div>
     </div>
-
+    
+    <!-- History View -->
+    <div id="historyContainer" style="display: none; margin-top: 20px;">
+        <div class="container">
+            <div class="container mt-5">
+                <h3 class="text-center mb-4">User History Table</h3>
+                <table id="historyTable" class="table table-striped table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Start Time</th>
+                            <th>Distance (km)</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            
+            <nav>
+                <ul class="pagination justify-content-center" id="paginationLinks"></ul>
+            </nav>
+            
+            <div class="mt-5 pt-5 text-center">
+                <form method="POST" action="{{ route('logout') }}" class="d-grid">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 WALK-A. All Rights Reserved.</p>
@@ -439,6 +513,72 @@
         function getRandomColor() {
             return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
+
+
+        document.getElementById('viewHistory').addEventListener('click', function () {
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('historyContainer').style.display = 'block';
+});
+
+document.getElementById('homeButton').addEventListener('click', function () {
+    document.getElementById('mainContent').style.display = 'block';
+    document.getElementById('historyContainer').style.display = 'none';
+});
+
+document.getElementById('backToMain').addEventListener('click', function () {
+    document.getElementById('mainContent').style.display = 'block';
+    document.getElementById('historyContainer').style.display = 'none';
+});
+
+
+$(document).ready(function() {
+    $('#historyTable').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: false,
+        ajax: {
+            url: '/history', // URL API untuk mengambil data
+            type: 'GET',
+            error: function(xhr, error, thrown) {
+                console.error('Ajax error: ', error); // Debugging jika ada masalah pada AJAX
+            }
+        },
+        pageLength: 5, // Jumlah data per halaman
+        lengthMenu: [5, 10, 25, 50],
+        columns: [
+            {
+                data: 'start_time',
+                name: 'start_time',
+                render: function(data, type, row) {
+                    // Pastikan data ada dan berupa tanggal yang valid
+                    if (data) {
+                        // Menggunakan JavaScript Date object untuk memformat tanggal
+                        var date = new Date(data); 
+                        
+                        // Menggunakan format d-m-Y H:i:s
+                        var day = ("0" + date.getDate()).slice(-2);
+                        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                        var year = date.getFullYear();
+                        var hours = ("0" + date.getHours()).slice(-2);
+                        var minutes = ("0" + date.getMinutes()).slice(-2);
+                        var seconds = ("0" + date.getSeconds()).slice(-2);
+                        
+                        return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+                    }
+                    return ''; // Jika tidak ada tanggal, tampilkan kosong
+                }
+            },
+            { data: 'distance', name: 'distance' },
+            { data: 'duration', name: 'duration' }
+        ]
+    });
+});
+
+
+
+
+
+
     </script>
     
     

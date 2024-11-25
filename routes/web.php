@@ -21,7 +21,6 @@ use App\Http\Controllers\UserController;
 Route::post('/save-history', [TrackingController::class, 'saveHistory']);
 
 
-
 Route::middleware(['auth', 'verified'])->group(function () {
     
 
@@ -60,5 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::middleware('is_not_admin')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('user');
+            Route::get('/history', [UserController::class, 'showHistory']);
+
         });
 });
