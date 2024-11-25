@@ -24,8 +24,10 @@
                     </h2>
                     
                     <div class="flex justify-around my-6 mb-7 pt-14">
-                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-blue-300 to-blue-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-person-running"></i> {{($history->distance)}} Km</span></p>
-                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-red-300 to-red-500 rounded-lg shadow-lg text-white"><i class="fa-regular fa-clock"></i> {{($history->duration)}}</span></p>
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-gray-300 to-gray-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-road"></i> {{($history->distance)}} Km</span></p>
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-blue-300 to-blue-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-person-running"></i> {{($history->steps)}} Steps</span></p>
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-red-300 to-red-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-fire"></i> {{($history->calori)}} Cal</span></p>
+                        <p class="text-center"><span class="text-2xl font-bold p-4 m-4 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-lg shadow-lg text-white"><i class="fa-regular fa-clock"></i> {{($history->duration)}}</span></p>
                     </div>
                     <div id="map" class="rounded-3xl h-96 shadow-lg border border-gray-300"></div>
                     <div class="my-6 mb-7 ">
