@@ -317,34 +317,74 @@
     </div>
     
     <!-- History View -->
-    <div id="historyContainer" style="display: none; margin-top: 20px;">
-        <div class="container">
-            <div class="container mt-5">
-                <h3 class="text-center mb-4">User History Table</h3>
-                <table id="historyTable" class="table table-striped table-bordered table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Start Time</th>
-                            <th>Distance (km)</th>
-                            <th>Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+<div id="historyContainer" style="display: none; margin-top: 20px;">
+    <div class="container">
+        <div class="container mt-5">
+            <h3 class="text-center mb-4">User History Table</h3>
+
+            <!-- Kotak Statistik -->
+            <div class="container mb-4">
+    <!-- Group 1 -->
+    <div class="d-flex justify-content-between mb-3">
+        <div class="card text-center flex-fill mx-2">
+            <div class="card-body">
+                <h5 class="card-title">Total Distance</h5>
+                <p class="card-text" id="totalDistance">0 km</p>
             </div>
-            
-            <nav>
-                <ul class="pagination justify-content-center" id="paginationLinks"></ul>
-            </nav>
-            
-            <div class="mt-5 pt-5 text-center">
-                <form method="POST" action="{{ route('logout') }}" class="d-grid">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
+        </div>
+        <div class="card text-center flex-fill mx-2">
+            <div class="card-body">
+                <h5 class="card-title">Total Duration</h5>
+                <p class="card-text" id="totalDuration">0</p>
             </div>
         </div>
     </div>
+    <!-- Group 2 -->
+    <div class="d-flex justify-content-between">
+        <div class="card text-center flex-fill mx-2">
+            <div class="card-body">
+                <h5 class="card-title">Total Calories</h5>
+                <p class="card-text" id="totalCalories">0 kcal</p>
+            </div>
+        </div>
+        <div class="card text-center flex-fill mx-2">
+            <div class="card-body">
+                <h5 class="card-title">Total Steps</h5>
+                <p class="card-text" id="totalSteps">0 steps</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+            <!-- Akhir Kotak Statistik -->
+
+            <table id="historyTable" class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Start Time</th>
+                        <th>Distance (km)</th>
+                        <th>Duration</th>
+                        <th>Polyline</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <nav>
+            <ul class="pagination justify-content-center" id="paginationLinks"></ul>
+        </nav>
+        
+        <div class="mt-5 pt-5 text-center">
+            <form method="POST" action="{{ route('logout') }}" class="d-grid">
+                @csrf
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>
+
     
     
     <!-- Footer -->
