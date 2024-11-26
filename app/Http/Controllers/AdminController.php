@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -22,12 +21,14 @@ class AdminController extends Controller
     public function Getuserindex(Request $request)
     {
         // Ambil parameter untuk pagination dan sorting dari DataTables request
-        $columns = ['id', 'name','company_name', 'total_distance', 'total_duration'];
+        $columns = ['id', 'name','company_name', 'total_distance', 'total_duration', 'total_steps', 'total_calori'];
 
         // Query untuk mengambil data pengguna
         $usersQuery = User::with('histories')
             ->select('users.*') // Pilih semua kolom dari users
             ->withSum('histories as total_distance', 'distance') // Menghitung total jarak
+            ->withSum('histories as total_steps', 'steps') // Menghitung total langkah
+            ->withSum('histories as total_calori', 'calori')
             ->with(['histories' => function ($query) {
                 $query->selectRaw('user_id, SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) as total_duration')
                     ->groupBy('user_id');
@@ -63,6 +64,8 @@ class AdminController extends Controller
                     'company_name' => $user->company_name,
                     'total_distance' => $user->total_distance,
                     'total_duration' => $user->histories->first() ? $user->histories->first()->total_duration : '00:00:00',
+                    'total_steps' => $user->total_steps,
+                    'total_calori' => $user->total_calori,
                     'actions' =>
                                 '<button class="edit-btn bg-green-500 text-white px-3 py-1 rounded" data-id="' . $user->id . '">
                                     <i class="fas fa-edit"></i>

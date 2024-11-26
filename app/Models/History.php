@@ -55,7 +55,7 @@ class History extends Model
     protected static function updateUserTotals($userId)
     {
         $totals = self::where('user_id', $userId)
-            ->selectRaw('SUM(distance) as total_distance, SUM(duration) as total_duration')
+            ->selectRaw('SUM(distance) as total_distance, SUM(duration) as total_duration, SUM(steps) as total_steps, SUM(calori) as total_calori')
             ->first();
 
         $user = User::find($userId);
@@ -63,6 +63,8 @@ class History extends Model
             $user->update([
                 'total_distance' => $totals->total_distance ?? 0,
                 'total_duration' => $totals->total_duration ?? 0,
+                'total_steps' => $totals->total_steps ?? 0,
+                'total_calori' => $totals->total_calori ?? 0,
             ]);
         }
     }

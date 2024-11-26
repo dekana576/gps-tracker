@@ -324,18 +324,20 @@
 
             <!-- Kotak Statistik -->
             <div class="container mb-4">
+
+                
     <!-- Group 1 -->
     <div class="d-flex justify-content-between mb-3">
         <div class="card text-center flex-fill mx-2">
             <div class="card-body">
                 <h5 class="card-title">Total Distance</h5>
-                <p class="card-text" id="totalDistance">0 km</p>
+                <p class="card-text" id="totalDistance">{{ $user->total_distance ?? 0 }} km</p>
             </div>
         </div>
         <div class="card text-center flex-fill mx-2">
             <div class="card-body">
                 <h5 class="card-title">Total Duration</h5>
-                <p class="card-text" id="totalDuration">0</p>
+                <p class="card-text" id="totalDuration">{{ $user->histories->first()->total_duration ?? 'N/A' }}</p>
             </div>
         </div>
     </div>
@@ -344,13 +346,13 @@
         <div class="card text-center flex-fill mx-2">
             <div class="card-body">
                 <h5 class="card-title">Total Calories</h5>
-                <p class="card-text" id="totalCalories">0 kcal</p>
+                <p class="card-text" id="totalCalories">{{ $user->total_calori ?? 0 }} kcal</p>
             </div>
         </div>
         <div class="card text-center flex-fill mx-2">
             <div class="card-body">
                 <h5 class="card-title">Total Steps</h5>
-                <p class="card-text" id="totalSteps">0 steps</p>
+                <p class="card-text" id="totalSteps">{{ $user->total_steps ?? 0 }} steps</p>
             </div>
         </div>
     </div>

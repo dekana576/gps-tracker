@@ -28,6 +28,8 @@
                                 <th class="px-4 py-2 border border-gray-300">Perusahaan</th>
                                 <th class="px-4 py-2 border border-gray-300">Total Jarak (km)</th>
                                 <th class="px-4 py-2 border border-gray-300">Total Durasi</th>
+                                <th class="px-4 py-2 border border-gray-300">Total Steps</th>
+                                <th class="px-4 py-2 border border-gray-300">Total Calori</th>
                                 <th class="px-4 py-2 border border-gray-300">Aksi</th>
                             </tr>
                         </thead>
@@ -66,6 +68,8 @@
                             }
                         },
                         { data: 'total_duration' },
+                        { data: 'total_steps' },
+                        { data: 'total_calori' },
                         { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
                     ],
                     language: {

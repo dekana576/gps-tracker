@@ -5,16 +5,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\History;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
-{
+{// Pastikan namespace Auth sudah diimport
+
     public function index()
     {
-        return view('welcome');
+        // Ambil pengguna yang sedang login
+        $user = Auth::user();
+
+        // Jika pengguna tidak login, arahkan ke halaman login atau berikan pesan
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Ambil data pengguna yang sedang login beserta histori
+        $user = User::with('histories')
+            ->where('id', $user->id) // Filter untuk user yang sedang login
+            ->select('users.*') // Pilih semua kolom dari users
+            ->withSum('histories as total_distance', 'distance') // Menghitung total jarak
+            ->withSum('histories as total_steps', 'steps') // Menghitung total langkah
+            ->withSum('histories as total_calori', 'calori') // Menghitung total kalori
+            ->with(['histories' => function ($query) {
+                $query->selectRaw('user_id, SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) as total_duration')
+                    ->groupBy('user_id');
+            }])
+            ->first(); // Ambil data pengguna login (hanya satu)
+
+        // Kirimkan data ke view
+        return view('welcome', compact('user'));
     }
+
 
 
 
