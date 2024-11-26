@@ -17,7 +17,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-8">
                 <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
-                    <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Data User dan Riwayat GPS</h2>
+                <h1 class="text-3xl font-extrabold text-center text-blue-600 mb-2">Data User dan Riwayat GPS</h1>
 
                     <table id="userTable" class="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-sm">
                         <thead class="bg-blue-500 text-white">

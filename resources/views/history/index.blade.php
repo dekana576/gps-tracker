@@ -20,8 +20,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-8">
                 <div class="container mx-auto mt-8 p-5 bg-white shadow-lg rounded-lg">
-                    <h2 class="text-2xl font-bold mb-4 text-center text-blue-500">Riwayat Pelacakan GPS</h2>
-
+                    <h1 class="text-3xl font-extrabold text-center text-blue-600 mb-2">Riwayat Pelacakan GPS</h1>
                     <!-- Filter dan Search -->
                     <div class="flex justify-between items-center mb-4">
                         <div>
