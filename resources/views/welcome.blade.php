@@ -571,7 +571,8 @@ document.getElementById('backToMain').addEventListener('click', function () {
 });
 
 
-$(document).ready(function() {
+$(document).ready(function () {
+    // Inisialisasi DataTable
     $('#historyTable').DataTable({
         processing: true,
         serverSide: true,
@@ -579,40 +580,24 @@ $(document).ready(function() {
         ajax: {
             url: '/history', // URL API untuk mengambil data
             type: 'GET',
-            error: function(xhr, error, thrown) {
-                console.error('Ajax error: ', error); // Debugging jika ada masalah pada AJAX
+            error: function (xhr, error, thrown) {
+                console.error('Error saat memuat data:', error);
             }
         },
         pageLength: 5, // Jumlah data per halaman
         lengthMenu: [5, 10, 25, 50],
         columns: [
             {
-                data: 'start_time',
+                data: 'start_time', // Kolom data waktu mulai
                 name: 'start_time',
-                render: function(data, type, row) {
-                    // Pastikan data ada dan berupa tanggal yang valid
-                    if (data) {
-                        // Menggunakan JavaScript Date object untuk memformat tanggal
-                        var date = new Date(data); 
-                        
-                        // Menggunakan format d-m-Y H:i:s
-                        var day = ("0" + date.getDate()).slice(-2);
-                        var month = ("0" + (date.getMonth() + 1)).slice(-2);
-                        var year = date.getFullYear();
-                        var hours = ("0" + date.getHours()).slice(-2);
-                        var minutes = ("0" + date.getMinutes()).slice(-2);
-                        var seconds = ("0" + date.getSeconds()).slice(-2);
-                        
-                        return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
-                    }
-                    return ''; // Jika tidak ada tanggal, tampilkan kosong
-                }
             },
-            { data: 'distance', name: 'distance' },
-            { data: 'duration', name: 'duration' }
+            { data: 'distance', name: 'distance' }, // Kolom jarak
+            { data: 'duration', name: 'duration' }  // Kolom durasi
         ]
     });
 });
+
+
 
 
 
