@@ -280,7 +280,7 @@
     <div id="mainContent">
         <div class="container mt-4">
             <div class="welcome-container">
-                <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000;">W A L K - A</p>
+                <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000 ;">ANAVATA</p>
                 <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
                 <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
                 <hr>
@@ -391,7 +391,7 @@
     
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 WALK-A. All Rights Reserved.</p>
+        <p>&copy; 2024 ANAVATA. All Rights Reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->
