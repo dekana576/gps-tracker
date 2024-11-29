@@ -3,7 +3,7 @@
 <style>
     /* CSS untuk latar belakang */
     .background-image {
-        background-image: url('../images/ahm.jpg'); /* Path relatif dari folder public */
+        background-image: url('../images/www.jpg'); /* Path relatif dari folder public */
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

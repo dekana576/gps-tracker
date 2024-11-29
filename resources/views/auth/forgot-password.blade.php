@@ -3,7 +3,7 @@
     <style>
         /* CSS untuk latar belakang */
         .background-image {
-            background-image: url('{{ asset('images/ahm.jpg') }}'); /* Ganti dengan path gambar Anda */
+            background-image: url('{{ asset('images/www.jpg') }}'); /* Ganti dengan path gambar Anda */
             background-size: cover; /* Mengatur ukuran gambar agar menutupi seluruh area */
             background-position: center; /* Memusatkan gambar */
             background-repeat: no-repeat; /* Tidak mengulang gambar */
