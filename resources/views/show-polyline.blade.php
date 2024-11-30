@@ -32,12 +32,12 @@
                 
                 <!-- Informasi Data -->
                 <div class="flex justify-around my-3 pt-14">
-                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-gray-300 to-gray-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-road"></i> {{ $history->distance }} Km</span></p>
-                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-blue-300 to-blue-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-person-running"></i> {{ $history->steps }} Steps</span></p>
+                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-gray-500 to-gray-700 rounded-lg shadow-lg text-white"><i class="fa-solid fa-road"></i> {{ $history->distance }} Km</span></p>
+                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg shadow-lg text-white"><i class="fa-solid fa-person-running"></i> {{ $history->steps }} Steps</span></p>
                 </div>
                 <div class="flex justify-around my-3 mb-11 pt-14">
-                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-red-300 to-red-500 rounded-lg shadow-lg text-white"><i class="fa-solid fa-fire"></i> {{ $history->calori }} Cal</span></p>
-                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-lg shadow-lg text-white"><i class="fa-regular fa-clock"></i> {{ $history->duration }}</span></p>
+                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-red-500 to-red-700 rounded-lg shadow-lg text-white"><i class="fa-solid fa-fire"></i> {{ $history->calori }} Cal</span></p>
+                    <p class="text-center"><span class="font-bold p-4 m-4 bg-gradient-to-r from-yellow-500 to-yellow-700 rounded-lg shadow-lg text-white"><i class="fa-regular fa-clock"></i> {{ $history->duration }}</span></p>
 
                 </div>
                 
