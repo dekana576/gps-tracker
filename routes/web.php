@@ -60,6 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('is_not_admin')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('user');
             Route::get('/history', [UserController::class, 'showHistory']);
+            Route::get('/history/{id}/polyline', [UserController::class, 'getPolyline']);
+
+
 
         });
 });

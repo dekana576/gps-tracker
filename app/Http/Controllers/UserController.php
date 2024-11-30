@@ -88,6 +88,16 @@ class UserController extends Controller
             'data' => $data,
         ]);
     }
+
+    public function getPolyline($id)
+    {
+        $history = History::findOrFail($id);
+        $history->polyline = json_decode($history->polyline);
+
+        // Return polyline data as JSON
+        return view('show-polyline', compact('history'));
+    }
+
     
 
 

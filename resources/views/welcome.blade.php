@@ -20,6 +20,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
 
     <!-- Custom Styles -->
     <style>
@@ -573,31 +576,43 @@ document.getElementById('backToMain').addEventListener('click', function () {
 });
 
 
-$(document).ready(function () {
-    // Inisialisasi DataTable
-    $('#historyTable').DataTable({
-        processing: true,
-        serverSide: true,
-        searching: false,
-        ajax: {
-            url: '/history', // URL API untuk mengambil data
-            type: 'GET',
-            error: function (xhr, error, thrown) {
-                console.error('Error saat memuat data:', error);
-            }
+$('#historyTable').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: false,
+    ajax: {
+        url: '/history',
+        type: 'GET',
+        dataSrc: function (json) {
+            console.log('Data diterima:', json); // Debug untuk melihat data
+            return json.data || []; // Pastikan mengembalikan array
         },
-        pageLength: 5, // Jumlah data per halaman
-        lengthMenu: [5, 10, 25, 50],
-        columns: [
-            {
-                data: 'start_time', // Kolom data waktu mulai
-                name: 'start_time',
+        error: function (xhr, error, thrown) {
+            console.error('Error saat memuat data:', xhr.responseText || error);
+        }
+    },
+    pageLength: 5,
+    lengthMenu: [5, 10, 25, 50],
+    columns: [
+        { data: 'start_time', name: 'start_time' },
+        { data: 'distance', name: 'distance' },
+        { data: 'duration', name: 'duration' },
+        {
+            data: 'id',
+            render: function (data) {
+                console.log('Render ID:', data); // Debug ID yang dirender
+                return `
+                    <a href="/history/${data}/polyline" 
+                       class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </a>`;
             },
-            { data: 'distance', name: 'distance' }, // Kolom jarak
-            { data: 'duration', name: 'duration' }  // Kolom durasi
-        ]
-    });
+            orderable: false,
+            searchable: false
+        }
+    ]
 });
+
 
 
 
