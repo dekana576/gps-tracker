@@ -23,7 +23,7 @@
                         <thead class="bg-blue-500 text-white">
                             <tr>
                                 <th class="px-4 py-2 border border-gray-300">No</th>
-                                <th class="px-4 py-2 border border-gray-300">ID</th>
+                                <!-- <th class="px-4 py-2 border border-gray-300">ID</th> -->
                                 <th class="px-4 py-2 border border-gray-300">Username</th>
                                 <th class="px-4 py-2 border border-gray-300">Perusahaan</th>
                                 <th class="px-4 py-2 border border-gray-300">Total Jarak (km)</th>
@@ -58,7 +58,7 @@
                                 return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
                             }
                         },
-                        { data: 'id' },
+                        // { data: 'id' },
                         { data: 'name' },
                         { data: 'company_name' },
                         {
