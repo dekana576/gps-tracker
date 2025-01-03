@@ -283,7 +283,7 @@
     <div id="mainContent">
         <div class="container mt-4">
             <div class="welcome-container">
-                <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000 ;">ANAVATA</p>
+                <p style="font-size: 50px; font-family: 'DM Serif Text', serif; color: #000 ;">Healthy With Astra</p>
                 <p>Welcome, <span class="username">{{ Auth::user()->name }}</span></p>
                 <p>From, <span class="company-name">{{ Auth::user()->company_name }}</span></p>
                 <hr>
