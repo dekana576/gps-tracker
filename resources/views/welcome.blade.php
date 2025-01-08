@@ -430,13 +430,7 @@ function showNotification(title, body) {
                 icon: "/path/to/icon.png", // Ganti dengan URL ikon Anda
                 badge: "/path/to/badge.png", // Ganti dengan URL badge Anda
                 vibrate: [200, 100, 200],
-                requireInteraction: true,
-                actions: [
-                    {
-                        action: "stop",
-                        title: "Berhenti Tracking"
-                    }
-                ]
+                
             });
         });
     }
