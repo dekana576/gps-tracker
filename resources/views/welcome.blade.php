@@ -407,7 +407,8 @@
         let marker;
         let tracking = false;
         let startTime;
-        let interval;
+        let locationInterval;
+        let timeInterval;
         let positions = [];
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
         let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
@@ -463,7 +464,11 @@
     
             let firstPosition = true;
     
-            interval = setInterval(() => {
+            // Update time every second
+            timeInterval = setInterval(updateStats, 1000);
+    
+            // Update location every 5 seconds
+            locationInterval = setInterval(() => {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function (position) {
                         const latlng = [position.coords.latitude, position.coords.longitude];
@@ -476,8 +481,6 @@
                         if (firstPosition) {
                             map.setView(latlng, 17);
                             firstPosition = false;
-                        } else {
-                            map.setView(latlng);
                         }
     
                         if (positions.length > 1) {
@@ -486,66 +489,64 @@
                             totalDistance += lastDistance;
                             updateStepsAndCalories(); // Update steps and calories based on the distance
                         }
-                        
-                        updateStats(); // Update stats every second
                     });
                 }
-            }, 1000);
+            }, 5000); // Update location every 5 seconds
         });
     
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
-            clearInterval(interval);
+            clearInterval(locationInterval);
+            clearInterval(timeInterval);
     
             const endTime = new Date();
             const duration = (endTime - startTime) / 1000;
     
             // Send only polyline, duration, and distance data to server
             fetch('/save-history', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    },
-    body: JSON.stringify({ 
-        polyline: positions, 
-        duration, 
-        distance: totalDistance, 
-        startTime, 
-        username, 
-        company, 
-        calori: totalCalories,
-        steps: totalSteps,
-        user_id 
-    })
-})
-.then(response => response.json())
-.then(data => {
-    // Tampilkan notifikasi sukses menggunakan SweetAlert
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: 'History berhasil disimpan.',
-        confirmButtonText: 'OK',
-        timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
-        timerProgressBar: true,
-        position: 'top-end', // Posisi toast di pojok kanan atas
-        toast: true,
-        showCloseButton: true // Tambahkan tombol close
-    });
-})
-.catch(error => {
-    // Tampilkan notifikasi error jika terjadi kesalahan
-    Swal.fire({
-        icon: 'error',
-        title: 'Gagal!',
-        text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
-        confirmButtonText: 'OK'
-    });
-});
-
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    polyline: positions,
+                    duration,
+                    distance: totalDistance,
+                    startTime,
+                    username,
+                    company,
+                    calori: totalCalories,
+                    steps: totalSteps,
+                    user_id
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Tampilkan notifikasi sukses menggunakan SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'History berhasil disimpan.',
+                        confirmButtonText: 'OK',
+                        timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
+                        timerProgressBar: true,
+                        position: 'top-end', // Posisi toast di pojok kanan atas
+                        toast: true,
+                        showCloseButton: true // Tambahkan tombol close
+                    });
+                })
+                .catch(error => {
+                    // Tampilkan notifikasi error jika terjadi kesalahan
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
+                        confirmButtonText: 'OK'
+                    });
+                });
         });
     
         function calculateDistance(positions) {
@@ -558,70 +559,59 @@
         function getRandomColor() {
             return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
-
-
+    
         document.getElementById('viewHistory').addEventListener('click', function () {
-    document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('historyContainer').style.display = 'block';
-});
-
-document.getElementById('homeButton').addEventListener('click', function () {
-    document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('historyContainer').style.display = 'none';
-});
-
-document.getElementById('backToMain').addEventListener('click', function () {
-    document.getElementById('mainContent').style.display = 'block';
-    document.getElementById('historyContainer').style.display = 'none';
-});
-
-
-$('#historyTable').DataTable({
-    processing: true,
-    serverSide: true,
-    searching: false,
-    ajax: {
-        url: '/history',
-        type: 'GET',
-        dataSrc: function (json) {
-            console.log('Data diterima:', json); // Debug untuk melihat data
-            return json.data || []; // Pastikan mengembalikan array
-        },
-        error: function (xhr, error, thrown) {
-            console.error('Error saat memuat data:', xhr.responseText || error);
-        }
-    },
-    pageLength: 5,
-    lengthMenu: [5, 10, 25, 50],
-    columns: [
-        { data: 'start_time', name: 'start_time' },
-        { data: 'distance', name: 'distance' },
-        { data: 'duration', name: 'duration' },
-        {
-            data: 'id',
-            render: function (data) {
-                console.log('Render ID:', data); // Debug ID yang dirender
-                return `
-                    <a href="/history/${data}/polyline" 
-                       class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </a>`;
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('historyContainer').style.display = 'block';
+        });
+    
+        document.getElementById('homeButton').addEventListener('click', function () {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('historyContainer').style.display = 'none';
+        });
+    
+        document.getElementById('backToMain').addEventListener('click', function () {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('historyContainer').style.display = 'none';
+        });
+    
+        $('#historyTable').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: false,
+            ajax: {
+                url: '/history',
+                type: 'GET',
+                dataSrc: function (json) {
+                    return json.data || [];
+                },
+                error: function (xhr, error, thrown) {
+                    console.error('Error saat memuat data:', xhr.responseText || error);
+                }
             },
-            orderable: false,
-            searchable: false
-        }
-    ]
-});
-
-
-
-
-
-
-
-
-
+            pageLength: 5,
+            lengthMenu: [5, 10, 25, 50],
+            columns: [
+                { data: 'start_time', name: 'start_time' },
+                { data: 'distance', name: 'distance' },
+                { data: 'duration', name: 'duration' },
+                {
+                    data: 'id',
+                    render: function (data) {
+                        return `
+                            <a href="/history/${data}/polyline" 
+                               class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>`;
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
     </script>
+    
+    
     
     
 
