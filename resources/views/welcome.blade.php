@@ -300,7 +300,7 @@
                 </div>
                 <div class="stat-item">
                     <span class="stat-title">Distance</span>
-                    <span id="distance">0.0 km</span>
+                    <span id="distance">0 km</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-title">Steps</span>
@@ -394,7 +394,7 @@
     
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 ANAVATA. All Rights Reserved.</p>
+    <p>&copy; <?= date("Y") ?> H W A. All Rights Reserved.</p>
     </footer>
 
     <!-- Bootstrap JS -->
