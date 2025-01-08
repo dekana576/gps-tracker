@@ -344,7 +344,6 @@
             </div>
         </div>
     </div>
-
     <!-- Group 2 -->
     <div class="d-flex justify-content-between">
         <div class="card text-center flex-fill mx-2">
@@ -402,215 +401,259 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JS -->
-<script>
-    let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
-    let polyline;
-    let marker;
-    let tracking = false;
-    let startTime;
-    let interval;
-    let positions = [];
-    let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
-    let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
-    let user_id = "{{ Auth::check() ? Auth::user()->id : '' }}";
+    <script>
+        
 
-    // Variables for tracking time, distance, steps, and calories
-    let totalDistance = 0;
-    let totalSteps = 0;
-    let totalCalories = 0;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Function to update live stats
-    function updateStats() {
-        const now = new Date();
-        const timeElapsed = Math.floor((now - startTime) / 1000); // in seconds
-        document.getElementById('time').textContent = formatTime(timeElapsed);
-
-        // Update distance dynamically: meters if < 1km, otherwise km
-        const formattedDistance = totalDistance < 1 
-            ? (totalDistance * 1000).toFixed(0) + " m" 
-            : totalDistance.toFixed(2) + " km";
-        document.getElementById('distance').textContent = formattedDistance;
-
-        document.getElementById('steps').textContent = totalSteps;
-        document.getElementById('calories').textContent = totalCalories.toFixed(1);
-    }
-
-    // Format time as MM:SS
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Function to calculate steps and calories
-    function updateStepsAndCalories() {
-        const stepsPerKm = 1333; // Approximately 1333 steps per kilometer (can vary by person)
-        totalSteps = Math.floor(totalDistance * stepsPerKm);
-        totalCalories = totalSteps * 0.04; // Approximate calorie burn per step
-    }
-
-    document.getElementById('startTracking').addEventListener('click', function () {
-        tracking = true;
-        startTime = new Date();
-        this.disabled = true;
-        document.getElementById('stopTracking').disabled = false;
-
-        // Reset stats
-        totalDistance = 0;
-        totalSteps = 0;
-        totalCalories = 0;
-        positions = []; // Reset positions
-
-        const color = getRandomColor();
-        polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
-
-        let firstPosition = true;
-
-        interval = setInterval(() => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const latlng = [position.coords.latitude, position.coords.longitude];
-                    positions.push(latlng);
-                    polyline.addLatLng(latlng);
-
-                    if (marker) map.removeLayer(marker);
-                    marker = L.marker(latlng).addTo(map);
-
-                    if (firstPosition) {
-                        map.setView(latlng, 17);
-                        firstPosition = false;
-                    } else {
-                        map.setView(latlng);
-                    }
-
-                    if (positions.length > 1) {
-                        // Calculate distance between the last two points
-                        const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
-                        totalDistance += lastDistance;
-                        updateStepsAndCalories(); // Update steps and calories based on the distance
-                    }
-                    
-                    updateStats(); // Update stats every second
-                });
-            }
-        }, 1000);
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+        console.log('Service Worker terdaftar:', registration.scope);
+    }).catch(function (error) {
+        console.error('Service Worker gagal terdaftar:', error);
     });
+}
 
-    document.getElementById('stopTracking').addEventListener('click', function () {
-        tracking = false;
-        this.disabled = true;
-        document.getElementById('startTracking').disabled = false;
-        clearInterval(interval);
+if ("Notification" in window && navigator.serviceWorker) {
+    Notification.requestPermission().then(permission => {
+        if (permission !== "granted") {
+            alert("Aktifkan izin notifikasi untuk fitur terbaik.");
+        }
+    });
+}
 
-        const endTime = new Date();
-        const duration = (endTime - startTime) / 1000;
 
-        // Send only polyline, duration, and distance data to server
-        fetch('/save-history', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ 
-                polyline: positions, 
-                duration, 
-                distance: totalDistance, 
-                startTime, 
-                username, 
-                company, 
-                calori: totalCalories,
-                steps: totalSteps,
-                user_id 
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: 'History berhasil disimpan.',
-                confirmButtonText: 'OK',
-                timer: 3000,
-                timerProgressBar: true,
-                position: 'top-end',
-                toast: true,
-                showCloseButton: true
-            });
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
-                confirmButtonText: 'OK'
+function showNotification(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+        navigator.serviceWorker.getRegistration().then(function (registration) {
+            registration.showNotification(title, {
+                body: body,
+                icon: "/path/to/icon.png", // Ganti dengan URL ikon Anda
+                badge: "/path/to/badge.png", // Ganti dengan URL badge Anda
+                vibrate: [200, 100, 200],
+                
             });
         });
-    });
-
-    function calculateDistance(positions) {
-        const latlng1 = L.latLng(positions[0]);
-        const latlng2 = L.latLng(positions[1]);
-        return latlng1.distanceTo(latlng2) / 1000; // Convert to kilometers
     }
+}
 
-    function getRandomColor() {
-        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    }
 
-    document.getElementById('viewHistory').addEventListener('click', function () {
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('historyContainer').style.display = 'block';
-    });
 
-    document.getElementById('homeButton').addEventListener('click', function () {
-        document.getElementById('mainContent').style.display = 'block';
-        document.getElementById('historyContainer').style.display = 'none';
-    });
 
-    document.getElementById('backToMain').addEventListener('click', function () {
-        document.getElementById('mainContent').style.display = 'block';
-        document.getElementById('historyContainer').style.display = 'none';
-    });
 
-    $('#historyTable').DataTable({
-        processing: true,
-        serverSide: true,
-        searching: false,
-        ajax: {
-            url: '/history',
-            type: 'GET',
-            dataSrc: function (json) {
-                console.log('Data diterima:', json);
-                return json.data || [];
-            },
-            error: function (xhr, error, thrown) {
-                console.error('Error saat memuat data:', xhr.responseText || error);
+
+
+
+        let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
+        let polyline;
+        let marker;
+        let tracking = false;
+        let startTime;
+        let timeInterval;
+        let positions = [];
+        let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
+        let company = "{{ Auth::check() ? Auth::user()->company_name : '' }}";
+        let user_id = "{{ Auth::check() ? Auth::user()->id : '' }}";
+    
+        // Variables for tracking time, distance, steps, and calories
+        let totalDistance = 0;
+        let totalSteps = 0;
+        let totalCalories = 0;
+    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+    
+        // Function to update live stats
+        function updateStats() {
+            const now = new Date();
+            const timeElapsed = Math.floor((now - startTime) / 1000); // in seconds
+            document.getElementById('time').textContent = formatTime(timeElapsed);
+            document.getElementById('distance').textContent = totalDistance.toFixed(2) + " km";
+            document.getElementById('steps').textContent = totalSteps;
+            document.getElementById('calories').textContent = totalCalories.toFixed(1);
+        }
+    
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+    
+        // Function to calculate steps and calories
+        function updateStepsAndCalories() {
+            const stepsPerKm = 1333; // Approximately 1333 steps per kilometer (can vary by person)
+            totalSteps = Math.floor(totalDistance * stepsPerKm);
+            totalCalories = totalSteps * 0.04; // Approximate calorie burn per step
+        }
+    
+        document.getElementById('startTracking').addEventListener('click', function () {
+            tracking = true;
+            startTime = new Date();
+            this.disabled = true;
+            document.getElementById('stopTracking').disabled = false;
+    
+            // Reset stats
+            totalDistance = 0;
+            totalSteps = 0;
+            totalCalories = 0;
+            positions = []; // Reset positions
+
+            showNotification("Tracking Dimulai", "Aplikasi sedang melacak lokasi Anda di latar belakang.");
+    
+            const color = getRandomColor();
+            polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
+    
+            let firstPosition = true;
+    
+            // Update time every second
+            timeInterval = setInterval(updateStats, 1000);
+    
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(function (position) {
+                    if (tracking) {
+                        const latlng = [position.coords.latitude, position.coords.longitude];
+                        positions.push(latlng);
+                        polyline.addLatLng(latlng);
+    
+                        if (marker) map.removeLayer(marker);
+                        marker = L.marker(latlng).addTo(map);
+    
+                        if (firstPosition) {
+                            map.setView(latlng, 17);
+                            firstPosition = false;
+                        }
+    
+                        if (positions.length > 1) {
+                            // Calculate distance between the last two points
+                            const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
+                            totalDistance += lastDistance;
+                            updateStepsAndCalories(); // Update steps and calories based on the distance
+                        }
+                    }
+                });
             }
-        },
-        pageLength: 5,
-        lengthMenu: [5, 10, 25, 50],
-        columns: [
-            { data: 'start_time', name: 'start_time' },
-            { data: 'distance', name: 'distance' },
-            { data: 'duration', name: 'duration' },
-            {
-                data: 'id',
-                render: function (data) {
-                    return `<a href="/history/${data}/polyline" class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center"><i class="fas fa-map-marker-alt"></i></a>`;
+        });
+    
+        document.getElementById('stopTracking').addEventListener('click', function () {
+            tracking = false;
+            this.disabled = true;
+            document.getElementById('startTracking').disabled = false;
+            clearInterval(timeInterval);
+
+            showNotification("Tracking Dihentikan", "Pelacakan lokasi Anda telah dihentikan.");
+    
+            const endTime = new Date();
+            const duration = (endTime - startTime) / 1000;
+    
+            // Send data to the server only when tracking stops
+            fetch('/save-history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                orderable: false,
-                searchable: false
-            }
-        ]
-    });
-</script>
-
-
+                body: JSON.stringify({
+                    polyline: positions,
+                    duration,
+                    distance: totalDistance,
+                    startTime,
+                    username,
+                    company,
+                    calori: totalCalories,
+                    steps: totalSteps,
+                    user_id
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Tampilkan notifikasi sukses menggunakan SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'History berhasil disimpan.',
+                        confirmButtonText: 'OK',
+                        timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
+                        timerProgressBar: true,
+                        position: 'top-end', // Posisi toast di pojok kanan atas
+                        toast: true,
+                        showCloseButton: true // Tambahkan tombol close
+                    });
+                })
+                .catch(error => {
+                    // Tampilkan notifikasi error jika terjadi kesalahan
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
+                        confirmButtonText: 'OK'
+                    });
+                });
+        });
+    
+        function calculateDistance(positions) {
+            const latlng1 = L.latLng(positions[0]);
+            const latlng2 = L.latLng(positions[1]);
+            return latlng1.distanceTo(latlng2) / 1000; // Convert to kilometers
+        }
+    
+        // Function for random colors
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        }
+    
+        document.getElementById('viewHistory').addEventListener('click', function () {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('historyContainer').style.display = 'block';
+        });
+    
+        document.getElementById('homeButton').addEventListener('click', function () {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('historyContainer').style.display = 'none';
+        });
+    
+        document.getElementById('backToMain').addEventListener('click', function () {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('historyContainer').style.display = 'none';
+        });
+    
+        $('#historyTable').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: false,
+            ajax: {
+                url: '/history',
+                type: 'GET',
+                dataSrc: function (json) {
+                    return json.data || [];
+                },
+                error: function (xhr, error, thrown) {
+                    console.error('Error saat memuat data:', xhr.responseText || error);
+                }
+            },
+            pageLength: 5,
+            lengthMenu: [5, 10, 25, 50],
+            columns: [
+                { data: 'start_time', name: 'start_time' },
+                { data: 'distance', name: 'distance' },
+                { data: 'duration', name: 'duration' },
+                {
+                    data: 'id',
+                    render: function (data) {
+                        return `
+                            <a href="/history/${data}/polyline" 
+                               class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>`;
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+    </script>
+        
+    
     
     
 
