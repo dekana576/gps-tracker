@@ -402,6 +402,53 @@
 
     <!-- Custom JS -->
     <script>
+        
+
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+        console.log('Service Worker terdaftar:', registration.scope);
+    }).catch(function (error) {
+        console.error('Service Worker gagal terdaftar:', error);
+    });
+}
+
+if ("Notification" in window && navigator.serviceWorker) {
+    Notification.requestPermission().then(permission => {
+        if (permission !== "granted") {
+            alert("Aktifkan izin notifikasi untuk fitur terbaik.");
+        }
+    });
+}
+
+
+function showNotification(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+        navigator.serviceWorker.getRegistration().then(function (registration) {
+            registration.showNotification(title, {
+                body: body,
+                icon: "/path/to/icon.png", // Ganti dengan URL ikon Anda
+                badge: "/path/to/badge.png", // Ganti dengan URL badge Anda
+                vibrate: [200, 100, 200],
+                requireInteraction: true,
+                actions: [
+                    {
+                        action: "stop",
+                        title: "Berhenti Tracking"
+                    }
+                ]
+            });
+        });
+    }
+}
+
+
+
+
+
+
+
+
         let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
         let polyline;
         let marker;
@@ -457,6 +504,8 @@
             totalSteps = 0;
             totalCalories = 0;
             positions = []; // Reset positions
+
+            showNotification("Tracking Dimulai", "Aplikasi sedang melacak lokasi Anda di latar belakang.");
     
             const color = getRandomColor();
             polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
@@ -497,6 +546,8 @@
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
             clearInterval(timeInterval);
+
+            showNotification("Tracking Dihentikan", "Pelacakan lokasi Anda telah dihentikan.");
     
             const endTime = new Date();
             const duration = (endTime - startTime) / 1000;
