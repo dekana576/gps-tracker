@@ -35,7 +35,7 @@
 
             <!-- Decorative Footer -->
             <div class="text-center mt-12">
-                <p class="text-gray-500 text-sm"> 2024 ANAVATA. All Rights Reserved.</p>
+            <p>&copy; <?= date("Y") ?> H W A. All Rights Reserved.</p>
             </div>
         </div>
     </body>
