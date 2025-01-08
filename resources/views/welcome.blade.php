@@ -344,6 +344,7 @@
             </div>
         </div>
     </div>
+
     <!-- Group 2 -->
     <div class="d-flex justify-content-between">
         <div class="card text-center flex-fill mx-2">
@@ -401,7 +402,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom JS -->
-    <script>
+<script>
     let map = L.map('map').setView([-8.378731110827148, 115.17459424051236], 10);
     let polyline;
     let marker;
@@ -608,6 +609,7 @@
         ]
     });
 </script>
+
 
     
     
