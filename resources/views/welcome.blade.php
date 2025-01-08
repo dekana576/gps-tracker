@@ -407,7 +407,6 @@
         let marker;
         let tracking = false;
         let startTime;
-        let locationInterval;
         let timeInterval;
         let positions = [];
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
@@ -467,10 +466,9 @@
             // Update time every second
             timeInterval = setInterval(updateStats, 1000);
     
-            // Update location every 5 seconds
-            locationInterval = setInterval(() => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function (position) {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(function (position) {
+                    if (tracking) {
                         const latlng = [position.coords.latitude, position.coords.longitude];
                         positions.push(latlng);
                         polyline.addLatLng(latlng);
@@ -489,22 +487,21 @@
                             totalDistance += lastDistance;
                             updateStepsAndCalories(); // Update steps and calories based on the distance
                         }
-                    });
-                }
-            }, 5000); // Update location every 5 seconds
+                    }
+                });
+            }
         });
     
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
-            clearInterval(locationInterval);
             clearInterval(timeInterval);
     
             const endTime = new Date();
             const duration = (endTime - startTime) / 1000;
     
-            // Send only polyline, duration, and distance data to server
+            // Send data to the server only when tracking stops
             fetch('/save-history', {
                 method: 'POST',
                 headers: {
@@ -610,7 +607,7 @@
             ]
         });
     </script>
-    
+        
     
     
     
