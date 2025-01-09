@@ -46,124 +46,131 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
         <script>
-            $(document).ready(function() {
-                $('#userTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ route('user.histories') }}",
-                    columns: [
-                        {
-                            data: 'id',
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
-                            }
-                        },
-                        // { data: 'id' },
-                        { data: 'name' },
-                        { data: 'company_name' },
-                        {
-                            data: 'total_distance',
-                            render: function(data) {
-                                return parseFloat(data).toFixed(2) + ' km'; // Format ke 2 desimal
-                            }
-                        },
-                        { data: 'total_duration' },
-                        { data: 'total_steps' },
-                        { data: 'total_calori' },
-                        { data: 'actions', orderable: false, searchable: false }, // Kolom aksi
-                    ],
-                    language: {
-                        processing: "Loading...",
-                        lengthMenu: "Tampilkan _MENU_ entri per halaman",
-                        zeroRecords: "Tidak ada data ditemukan",
-                        info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
-                        infoEmpty: "Tidak ada entri tersedia",
-                        infoFiltered: "(disaring dari _MAX_ total entri)",
-                        search: "Cari:",
-                        paginate: {
-                            first: "Pertama",
-                            last: "Terakhir",
-                            next: "Berikutnya",
-                            previous: "Sebelumnya"
-                        }
-                    },
-                    rowCallback: function(row, data, index) {
-                        if (index % 2 === 0) {
-                            $(row).addClass('bg-gray-100'); // Baris ganjil dengan warna latar belakang berbeda
-                        }
-                        $('td', row).addClass('border border-gray-300');
+    $(document).ready(function () {
+        $('#userTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('user.histories') }}",
+            columns: [
+                {
+                    data: 'id',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Nomor urut
                     }
-                });
+                },
+                { data: 'name' },
+                { data: 'company_name' },
+                {
+                    data: 'total_distance',
+                    render: function (data) {
+                        const distance = parseFloat(data);
+                        return distance < 1 
+                            ? `${(distance * 1000).toFixed(0)} m` // Format meter jika < 1 km
+                            : `${distance.toFixed(2)} km`; // Format kilometer jika >= 1 km
+                    }
+                },
+                { data: 'total_duration' }, // Tetap menampilkan apa adanya
+                { data: 'total_steps' },    // Tetap menampilkan apa adanya
+                { data: 'total_calori' },   // Tetap menampilkan apa adanya
+                { 
+                    data: 'actions', 
+                    orderable: false, 
+                    searchable: false 
+                } // Kolom aksi
+            ],
+            language: {
+                processing: "Loading...",
+                lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                zeroRecords: "Tidak ada data ditemukan",
+                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ entri",
+                infoEmpty: "Tidak ada entri tersedia",
+                infoFiltered: "(disaring dari _MAX_ total entri)",
+                search: "Cari:",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Berikutnya",
+                    previous: "Sebelumnya"
+                }
+            },
+            rowCallback: function (row, data, index) {
+                if (index % 2 === 0) {
+                    $(row).addClass('bg-gray-100'); // Baris ganjil dengan warna latar belakang berbeda
+                }
+                $('td', row).addClass('border border-gray-300');
+            }
+        });
 
-                // Fungsi untuk mengedit data
-                $(document).on('click', '.edit-btn', function() {
-                    const userId = $(this).data('id');
+        // Fungsi untuk mengedit data
+        $(document).on('click', '.edit-btn', function () {
+            const userId = $(this).data('id');
 
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Anda akan mengedit data user ini!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, edit!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire(
-                                'Diedit!',
-                                'User dengan ID ' + userId + ' akan diedit.',
-                                'success'
-                            ).then(() => {
-                                window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route edit
-                            });
-                        }
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda akan mengedit data user ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, edit!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Diedit!',
+                        'User dengan ID ' + userId + ' akan diedit.',
+                        'success'
+                    ).then(() => {
+                        window.location.href = `/users/${userId}/edit`; // Ganti URL sesuai route edit
                     });
-                });
-
-                // Fungsi untuk menghapus data
-                $(document).on('click', '.delete-btn', function() {
-                    const userId = $(this).data('id');
-
-                    // Tampilkan dialog konfirmasi SweetAlert2 untuk penghapusan data
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Data yang dihapus tidak bisa dikembalikan!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Lakukan penghapusan data via AJAX
-                            $.ajax({
-                                url: `/users/${userId}`, // Ganti URL sesuai route penghapusan
-                                type: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
-                                },
-                                success: function(result) {
-                                    Swal.fire(
-                                        'Terhapus!',
-                                        'User berhasil dihapus.',
-                                        'success'
-                                    );
-                                    $('#userTable').DataTable().ajax.reload(); // Refresh tabel setelah penghapusan
-                                },
-                                error: function(err) {
-                                    Swal.fire(
-                                        'Gagal!',
-                                        'Terjadi kesalahan saat menghapus user.',
-                                        'error'
-                                    );
-                                }
-                            });
-                        }
-                    });
-                });
+                }
             });
-        </script>
+        });
+
+        // Fungsi untuk menghapus data
+        $(document).on('click', '.delete-btn', function () {
+            const userId = $(this).data('id');
+
+            // Tampilkan dialog konfirmasi SweetAlert2 untuk penghapusan data
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Lakukan penghapusan data via AJAX
+                    $.ajax({
+                        url: `/users/${userId}`, // Ganti URL sesuai route penghapusan
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                        },
+                        success: function (result) {
+                            Swal.fire(
+                                'Terhapus!',
+                                'User berhasil dihapus.',
+                                'success'
+                            );
+                            $('#userTable').DataTable().ajax.reload(); // Refresh tabel setelah penghapusan
+                        },
+                        error: function (err) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus user.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
     </body>
     </html>
 </x-app-layout>

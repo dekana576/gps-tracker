@@ -61,120 +61,124 @@
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                // Setup CSRF Token for all AJAX requests
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    $(document).ready(function () {
+        // Setup CSRF Token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Initialize DataTable
+        var table = $('#historiesTable').DataTable({
+            processing: true,
+            serverSide: true,
+            searching: true,
+            ajax: {
+                url: "{{ route('admin.histories') }}",
+                data: function (d) {
+                    d.date = $('#dateFilter').val();
+                }
+            },
+            columns: [
+                {
+                    data: 'id',
+                    name: 'id',
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
-                });
-
-                // Initialize DataTable
-                var table = $('#historiesTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    searching: true,
-                    ajax: {
-                        url: "{{ route('admin.histories') }}",
-                        data: function (d) {
-                            d.date = $('#dateFilter').val();
-                        }
-                    },
-                    columns: [
-                        {
-                            data: 'id',
-                            name: 'id',
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        { data: 'username', name: 'username' },
-                        { data: 'company_name', name: 'company_name' },
-                        { 
-                            data: 'distance', 
-                            name: 'distance', 
-                            render: function (data) {
-                                return `${parseFloat(data).toFixed(2)} km`;
-                            }
-                        },
-                        { data: 'duration', name: 'duration' },
-                        { data: 'start_time', name: 'start_time' },
-                        {
-                            data: 'id',
-                            name: 'actions',
-                            orderable: false,
-                            searchable: false,
-                            render: function (data, type, row) {
-                                return `
-                                    <div class="flex space-x-2 items-center">
-                                        <a href="/admin/history/show/${data}" class="w-10 h-10 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </a>
-                                        <button 
-                                            type="button" 
-                                            class="w-10 h-10 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center delete-btn" 
-                                            data-id="${data}"
-                                        >
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-                                `;
-                            }
-                        }
-                    ],
-                    rowCallback: function(row, data, index){
-                        if (index % 2 === 0) {
-                            $(row).addClass('bg-gray-100');
-                        }
-                        $('td', row).addClass('border border-gray-300');
-                    },
-                    language: {
-                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                },
+                { data: 'username', name: 'username' },
+                { data: 'company_name', name: 'company_name' },
+                { 
+                    data: 'distance', 
+                    name: 'distance', 
+                    render: function (data) {
+                        const distance = parseFloat(data);
+                        return distance < 1 
+                            ? `${(distance * 1000).toFixed(0)} m` 
+                            : `${distance.toFixed(2)} km`;
                     }
-                });
+                },
+                { data: 'duration', name: 'duration' },
+                { data: 'start_time', name: 'start_time' },
+                {
+                    data: 'id',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <div class="flex space-x-2 items-center">
+                                <a href="/admin/history/show/${data}" class="w-10 h-10 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </a>
+                                <button 
+                                    type="button" 
+                                    class="w-10 h-10 bg-red-500 text-white rounded hover:bg-red-600 flex items-center justify-center delete-btn" 
+                                    data-id="${data}"
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            ],
+            rowCallback: function(row, data, index){
+                if (index % 2 === 0) {
+                    $(row).addClass('bg-gray-100');
+                }
+                $('td', row).addClass('border border-gray-300');
+            },
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+            }
+        });
 
-                // Event listener untuk tombol hapus
-                $(document).on('click', '.delete-btn', function () {
-                    var id = $(this).data('id'); // Ambil ID dari tombol
+        // Event listener untuk tombol hapus
+        $(document).on('click', '.delete-btn', function () {
+            var id = $(this).data('id'); // Ambil ID dari tombol
 
-                    // Tampilkan konfirmasi menggunakan SweetAlert2
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Anda tidak dapat mengembalikan data yang sudah dihapus!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, hapus!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Lakukan permintaan AJAX untuk menghapus data
-                            $.ajax({
-                                url: `/admin/history/delete/${id}`, // URL endpoint untuk hapus
-                                method: 'DELETE',
-                                success: function (response) {
-                                    // Tampilkan notifikasi sukses dengan SweetAlert2
-                                    Swal.fire(
-                                        'Terhapus!',
-                                        response.message,
-                                        'success'
-                                    );
-                                    table.ajax.reload(); // Reload DataTable
-                                },
-                                error: function (xhr, status, error) {
-                                    // Tampilkan notifikasi error dengan SweetAlert2
-                                    Swal.fire(
-                                        'Gagal!',
-                                        'Terjadi kesalahan saat menghapus data.',
-                                        'error'
-                                    );
-                                }
-                            });
+            // Tampilkan konfirmasi menggunakan SweetAlert2
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat mengembalikan data yang sudah dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Lakukan permintaan AJAX untuk menghapus data
+                    $.ajax({
+                        url: `/admin/history/delete/${id}`, // URL endpoint untuk hapus
+                        method: 'DELETE',
+                        success: function (response) {
+                            // Tampilkan notifikasi sukses dengan SweetAlert2
+                            Swal.fire(
+                                'Terhapus!',
+                                response.message,
+                                'success'
+                            );
+                            table.ajax.reload(); // Reload DataTable
+                        },
+                        error: function (xhr, status, error) {
+                            // Tampilkan notifikasi error dengan SweetAlert2
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus data.',
+                                'error'
+                            );
                         }
                     });
-                });
+                }
             });
-        </script>
+        });
+    });
+</script>
+
     </body>
     </html>
 </x-app-layout>
