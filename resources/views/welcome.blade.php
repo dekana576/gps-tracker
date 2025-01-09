@@ -22,6 +22,9 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+    <link rel="manifest" href="/manifest.json">
+
+
 
 
     <!-- Custom Styles -->
@@ -427,14 +430,36 @@ function showNotification(title, body) {
         navigator.serviceWorker.getRegistration().then(function (registration) {
             registration.showNotification(title, {
                 body: body,
-                icon: "/path/to/icon.png", // Ganti dengan URL ikon Anda
-                badge: "/path/to/badge.png", // Ganti dengan URL badge Anda
+                icon: "images/astra-honda-motor-logo.png",
+                badge: "images/astra-honda-motor-logo.png",
                 vibrate: [200, 100, 200],
-                
+                actions: [
+                    { action: 'view', title: 'Lihat' },
+                    { action: 'dismiss', title: 'Abaikan' }
+                ],
+                tag: 'location-tracking'
             });
         });
     }
 }
+
+
+let wakeLock = null;
+
+async function requestWakeLock() {
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+            console.log('Wake lock released');
+        });
+        console.log('Wake lock active');
+    } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+    }
+}
+
+document.getElementById('startTracking').addEventListener('click', requestWakeLock);
+
 
 
 

@@ -1,17 +1,37 @@
-self.addEventListener('notificationclick', function (event) {
-    event.notification.close(); // Tutup notifikasi
+const CACHE_NAME = 'gps-tracker-cache-v1';
+const urlsToCache = [
+    '/',
+    'images/astra-honda-motor-logo.png',
+    '/css/app.css',
+    '/js/app.js'
+];
 
+self.addEventListener('install', event => {
     event.waitUntil(
-        // Ambil semua jendela aktif
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                return response || fetch(event.request);
+            })
+    );
+});
+
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+    event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-            // Fokuskan ke salah satu jendela yang aktif
-            for (const client of clientList) {
-                if ('focus' in client) {
-                    return client.focus(); // Fokuskan ke jendela yang sudah ada
-                }
+            if (clientList.length > 0) {
+                return clientList[0].focus();
             }
-            // Tidak ada jendela lain yang aktif, tetap tidak membuka yang baru
-            return Promise.resolve(); // Tidak melakukan apa-apa jika tidak ada jendela aktif
+            return clients.openWindow('/');
         })
     );
 });
