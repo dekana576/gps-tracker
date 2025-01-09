@@ -36,6 +36,12 @@ class UserController extends Controller
             }])
             ->first(); // Ambil data pengguna login (hanya satu)
 
+            if ($user->total_distance < 1) {
+                $user->total_distance = $user->total_distance * 1000 . ' m'; // Ubah ke meter
+            } else {
+                $user->total_distance = $user->total_distance . ' km'; // Tetap dalam kilometer
+            }
+
         // Kirimkan data ke view
         return view('welcome', compact('user'));
     }

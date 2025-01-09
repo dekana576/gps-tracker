@@ -337,7 +337,7 @@
         <div class="card text-center flex-fill mx-2">
             <div class="card-body">
                 <h5 class="card-title">Total Distance</h5>
-                <p class="card-text" id="totalDistance">{{ $user->total_distance ?? 0 }} km</p>
+                <p class="card-text" id="totalDistance">{{ $user->total_distance ?? 0 }} </p>
             </div>
         </div>
         <div class="card text-center flex-fill mx-2">
@@ -493,7 +493,11 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
             const now = new Date();
             const timeElapsed = Math.floor((now - startTime) / 1000); // in seconds
             document.getElementById('time').textContent = formatTime(timeElapsed);
-            document.getElementById('distance').textContent = totalDistance.toFixed(2) + " km";
+            const formattedDistance = totalDistance < 1 
+            ? (totalDistance * 1000).toFixed(0) + " m" 
+            : totalDistance.toFixed(2) + " km";
+        document.getElementById('distance').textContent = formattedDistance;
+
             document.getElementById('steps').textContent = totalSteps;
             document.getElementById('calories').textContent = totalCalories.toFixed(1);
         }
@@ -659,23 +663,32 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
             pageLength: 5,
             lengthMenu: [5, 10, 25, 50],
             columns: [
-                { data: 'start_time', name: 'start_time' },
-                { data: 'distance', name: 'distance' },
-                { data: 'duration', name: 'duration' },
-                {
-                    data: 'id',
-                    render: function (data) {
-                        return `
-                            <a href="/history/${data}/polyline" 
-                               class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </a>`;
-                    },
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-        });
+    { data: 'start_time', name: 'start_time' },
+    { 
+        data: 'distance', 
+        name: 'distance', 
+        render: function (data) {
+            if (data < 1) {
+                return (data * 1000).toFixed(0) + ' m'; // Konversi ke meter jika kurang dari 1 km
+            }
+            return data.toFixed(2) + ' km'; // Tetap dalam kilometer jika >= 1 km
+        }
+    },
+    { data: 'duration', name: 'duration' },
+    {
+        data: 'id',
+        render: function (data) {
+            return `
+                <a href="/history/${data}/polyline" 
+                   class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
+                    <i class="fas fa-map-marker-alt"></i>
+                </a>`;
+        },
+        orderable: false,
+        searchable: false
+    }
+]
+    });
     </script>
         
     
