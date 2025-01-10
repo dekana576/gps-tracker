@@ -473,7 +473,7 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
         let marker;
         let tracking = false;
         let startTime;
-        let timeInterval;
+        // let timeInterval;
         let interval;
         let positions = [];
         let username = "{{ Auth::check() ? Auth::user()->name : '' }}";
@@ -517,53 +517,7 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
             totalCalories = totalSteps * 0.04; // Approximate calorie burn per step
         }
     
-        // document.getElementById('startTracking').addEventListener('click', function () {
-        //     tracking = true;
-        //     startTime = new Date();
-        //     this.disabled = true;
-        //     document.getElementById('stopTracking').disabled = false;
-    
-        //     // Reset stats
-        //     totalDistance = 0;
-        //     totalSteps = 0;
-        //     totalCalories = 0;
-        //     positions = []; // Reset positions
-
-        //     showNotification("Tracking Dimulai", "Aplikasi sedang melacak lokasi Anda di latar belakang.");
-    
-        //     const color = getRandomColor();
-        //     polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
-    
-        //     let firstPosition = true;
-    
-        //     // Update time every second
-        //     timeInterval = setInterval(updateStats, 1000);
-    
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.watchPosition(function (position) {
-        //             if (tracking) {
-        //                 const latlng = [position.coords.latitude, position.coords.longitude];
-        //                 positions.push(latlng);
-        //                 polyline.addLatLng(latlng);
-    
-        //                 if (marker) map.removeLayer(marker);
-        //                 marker = L.marker(latlng).addTo(map);
-    
-        //                 if (firstPosition) {
-        //                     map.setView(latlng, 17);
-        //                     firstPosition = false;
-        //                 }
-    
-        //                 if (positions.length > 1) {
-        //                     // Calculate distance between the last two points
-        //                     const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
-        //                     totalDistance += lastDistance;
-        //                     updateStepsAndCalories(); // Update steps and calories based on the distance
-        //                 }
-        //             }
-        //         });
-        //     }
-        // });
+        
 
         document.getElementById('startTracking').addEventListener('click', function () {
         tracking = true;
@@ -576,7 +530,6 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
         totalSteps = 0;
         totalCalories = 0;
         positions = []; // Reset positions
-
         showNotification("Tracking Dimulai", "Aplikasi sedang melacak lokasi Anda di latar belakang.");
 
         const color = getRandomColor();
@@ -584,9 +537,8 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
 
         let firstPosition = true;
 
-        timeInterval = setInterval(updateStats, 1000);
-
         interval = setInterval(() => {
+
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -614,14 +566,15 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
                     updateStats(); // Update stats every second
                 });
             }
-        }, 5000);
+        }, 1000);
     });
     
         document.getElementById('stopTracking').addEventListener('click', function () {
             tracking = false;
             this.disabled = true;
             document.getElementById('startTracking').disabled = false;
-            clearInterval(timeInterval);
+            clearInterval(interval);
+
 
             showNotification("Tracking Dihentikan", "Pelacakan lokasi Anda telah dihentikan.");
     
