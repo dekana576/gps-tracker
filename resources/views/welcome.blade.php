@@ -667,12 +667,29 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
     { 
         data: 'distance', 
         name: 'distance', 
-        render: function (data) {
-            if (data < 1) {
-                return (data * 1000).toFixed(0) + ' m'; // Konversi ke meter jika kurang dari 1 km
+        render: function (data, type, row) {
+            if (type === 'display' || type === 'filter') {
+                // Cek apakah data valid dan merupakan angka
+                var value = parseFloat(data);
+                
+                // Jika data bukan angka atau null, kembalikan tanda strip '-'
+                if (isNaN(value) || value === null) {
+                    return '-'; // Kembalikan simbol atau teks pengganti jika data tidak valid
+                }
+
+                // Jika data kurang dari 1 km, konversi ke meter
+                if (value < 1) {
+                    return (value * 1000).toFixed(0) + ' m'; // Konversi ke meter
+                }
+
+                // Jika data >= 1 km, tampilkan dalam kilometer
+                return value.toFixed(2) + ' km';
             }
-            return data.toFixed(2) + ' km'; // Tetap dalam kilometer jika >= 1 km
+
+            // Jika bukan tipe display/filter, kembalikan data asli
+            return data;
         }
+
     },
     { data: 'duration', name: 'duration' },
     {
