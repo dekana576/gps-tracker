@@ -464,68 +464,72 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
     }, {
         enableHighAccuracy: true,
         maximumAge: 0,
-        timeout: 5000
+        timeout: 3000
     });
 }
 
         }, 500);
     });
     
-        document.getElementById('stopTracking').addEventListener('click', function () {
-            tracking = false;
-            this.disabled = true;
-            document.getElementById('startTracking').disabled = false;
-            clearInterval(timeInterval);
+    document.getElementById('stopTracking').addEventListener('click', function () {
+    tracking = false;
+    this.disabled = true;
+    document.getElementById('startTracking').disabled = false;
+    
+    // Hentikan interval untuk update waktu dan lokasi
+    clearInterval(timeInterval);
+    clearInterval(interval);  // Tambahkan ini untuk menghentikan interval lokasi
 
-            showNotification("Tracking Dihentikan", "Pelacakan lokasi Anda telah dihentikan.");
-    
-            const endTime = new Date();
-            const duration = (endTime - startTime) / 1000;
-    
-            // Send data to the server only when tracking stops
-            fetch('/save-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    polyline: positions,
-                    duration,
-                    distance: totalDistance,
-                    startTime,
-                    username,
-                    company,
-                    calori: totalCalories,
-                    steps: totalSteps,
-                    user_id
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Tampilkan notifikasi sukses menggunakan SweetAlert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'History berhasil disimpan.',
-                        confirmButtonText: 'OK',
-                        timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
-                        timerProgressBar: true,
-                        position: 'top-end', // Posisi toast di pojok kanan atas
-                        toast: true,
-                        showCloseButton: true // Tambahkan tombol close
-                    });
-                })
-                .catch(error => {
-                    // Tampilkan notifikasi error jika terjadi kesalahan
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
-                        confirmButtonText: 'OK'
-                    });
-                });
+    showNotification("Tracking Dihentikan", "Pelacakan lokasi Anda telah dihentikan.");
+
+    const endTime = new Date();
+    const duration = (endTime - startTime) / 1000;
+
+    // Send data to the server only when tracking stops
+    fetch('/save-history', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            polyline: positions,
+            duration,
+            distance: totalDistance,
+            startTime,
+            username,
+            company,
+            calori: totalCalories,
+            steps: totalSteps,
+            user_id
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Tampilkan notifikasi sukses menggunakan SweetAlert
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'History berhasil disimpan.',
+            confirmButtonText: 'OK',
+            timer: 3000, // Toast akan otomatis tertutup dalam 3 detik
+            timerProgressBar: true,
+            position: 'top-end', // Posisi toast di pojok kanan atas
+            toast: true,
+            showCloseButton: true // Tambahkan tombol close
         });
+    })
+    .catch(error => {
+        // Tampilkan notifikasi error jika terjadi kesalahan
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: 'Terjadi kesalahan saat menyimpan history. Silakan coba lagi.',
+            confirmButtonText: 'OK'
+        });
+    });
+});
+
     
         function calculateDistance(positions) {
             const latlng1 = L.latLng(positions[0]);
