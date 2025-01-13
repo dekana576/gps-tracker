@@ -437,31 +437,37 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
         interval = setInterval(() => {
 
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const latlng = [position.coords.latitude, position.coords.longitude];
-                    positions.push(latlng);
-                    polyline.addLatLng(latlng);
+    navigator.geolocation.getCurrentPosition(function (position) {
+        const latlng = [position.coords.latitude, position.coords.longitude];
+        positions.push(latlng);
+        polyline.addLatLng(latlng);
 
-                    if (marker) map.removeLayer(marker);
-                    marker = L.marker(latlng).addTo(map);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(latlng).addTo(map);
 
-                    if (firstPosition) {
-                        map.setView(latlng, 17);
-                        firstPosition = false;
-                    } else {
-                        map.setView(latlng);
-                    }
+        if (firstPosition) {
+            map.setView(latlng, 17);
+            firstPosition = false;
+        } else {
+            map.setView(latlng);
+        }
 
-                    if (positions.length > 1) {
-                        // Calculate distance between the last two points
-                        const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
-                        totalDistance += lastDistance;
-                        updateStepsAndCalories(); // Update steps and calories based on the distance
-                    }
-                    
-                    updateStats(); // Update stats every second
-                });
-            }
+        if (positions.length > 1) {
+            const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
+            totalDistance += lastDistance;
+            updateStepsAndCalories();
+        }
+
+        updateStats();
+    }, function (error) {
+        console.error("Error mendapatkan lokasi: ", error);
+    }, {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000
+    });
+}
+
         }, 500);
     });
     
@@ -531,6 +537,7 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
         function getRandomColor() {
             return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
+        
     
        
         
