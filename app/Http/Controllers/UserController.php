@@ -23,7 +23,20 @@ class UserController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Ambil data pengguna yang sedang login beserta histori
+
+        // Kirimkan data ke view
+        return view('welcome', compact('user'));
+    }
+
+    public function userHistory()
+    {
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $user = User::with('histories')
             ->where('id', $user->id) // Filter untuk user yang sedang login
             ->select('users.*') // Pilih semua kolom dari users
@@ -42,8 +55,7 @@ class UserController extends Controller
                 $user->total_distance = $user->total_distance . ' km'; // Tetap dalam kilometer
             }
 
-        // Kirimkan data ke view
-        return view('welcome', compact('user'));
+        return view('user-history', compact('user'));
     }
 
 

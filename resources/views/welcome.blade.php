@@ -213,39 +213,7 @@
             font-size: 0.9rem;
         }
 
-        .table {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .table th, .table td {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f1f3f5;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        padding: 0.5rem 0.8rem;
-        margin: 0 2px;
-        border-radius: 5px;
-        background: #333;
-        color: #fff !important;
-        border: none;
-        transition: background 0.3s ease-in-out;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: #007bff;
-        color: #fff !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-        background: #007bff;
-        color: #fff !important;
-        font-weight: bold;
-    }
+      
     </style>
 </head>
 
@@ -272,10 +240,10 @@
             <div class="collapse navbar-collapse justify-content-center text-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="javascript:void(0);" id="homeButton" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Home</a>
+                        <a href="{{ route('user')}}" id="homeButton" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="javascript:void(0);" id="viewHistory" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Profile</a>
+                        <a href="{{ route('userHistory')}}" id="viewHistory" class="nav-link my-3 mx-3" style="border-bottom: gray solid 1px">Profile</a>
                     </li>
                 </ul>
             </div>
@@ -517,53 +485,7 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
             totalCalories = totalSteps * 0.04; // Approximate calorie burn per step
         }
     
-        // document.getElementById('startTracking').addEventListener('click', function () {
-        //     tracking = true;
-        //     startTime = new Date();
-        //     this.disabled = true;
-        //     document.getElementById('stopTracking').disabled = false;
-    
-        //     // Reset stats
-        //     totalDistance = 0;
-        //     totalSteps = 0;
-        //     totalCalories = 0;
-        //     positions = []; // Reset positions
-
-        //     showNotification("Tracking Dimulai", "Aplikasi sedang melacak lokasi Anda di latar belakang.");
-    
-        //     const color = getRandomColor();
-        //     polyline = L.polyline([], { color: color, weight: 5 }).addTo(map);
-    
-        //     let firstPosition = true;
-    
-        //     // Update time every second
-        //     timeInterval = setInterval(updateStats, 1000);
-    
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.watchPosition(function (position) {
-        //             if (tracking) {
-        //                 const latlng = [position.coords.latitude, position.coords.longitude];
-        //                 positions.push(latlng);
-        //                 polyline.addLatLng(latlng);
-    
-        //                 if (marker) map.removeLayer(marker);
-        //                 marker = L.marker(latlng).addTo(map);
-    
-        //                 if (firstPosition) {
-        //                     map.setView(latlng, 17);
-        //                     firstPosition = false;
-        //                 }
-    
-        //                 if (positions.length > 1) {
-        //                     // Calculate distance between the last two points
-        //                     const lastDistance = calculateDistance([positions[positions.length - 2], latlng]);
-        //                     totalDistance += lastDistance;
-        //                     updateStepsAndCalories(); // Update steps and calories based on the distance
-        //                 }
-        //             }
-        //         });
-        //     }
-        // });
+       
 
         document.getElementById('startTracking').addEventListener('click', function () {
         tracking = true;
@@ -614,7 +536,7 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
                     updateStats(); // Update stats every second
                 });
             }
-        }, 5000);
+        }, 500);
     });
     
         document.getElementById('stopTracking').addEventListener('click', function () {
@@ -684,81 +606,8 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
             return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
         }
     
-        document.getElementById('viewHistory').addEventListener('click', function () {
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('historyContainer').style.display = 'block';
-        });
-    
-        document.getElementById('homeButton').addEventListener('click', function () {
-            document.getElementById('mainContent').style.display = 'block';
-            document.getElementById('historyContainer').style.display = 'none';
-        });
-    
-        document.getElementById('backToMain').addEventListener('click', function () {
-            document.getElementById('mainContent').style.display = 'block';
-            document.getElementById('historyContainer').style.display = 'none';
-        });
-    
-        $('#historyTable').DataTable({
-            processing: true,
-            serverSide: true,
-            searching: false,
-            ajax: {
-                url: '/history',
-                type: 'GET',
-                dataSrc: function (json) {
-                    return json.data || [];
-                },
-                error: function (xhr, error, thrown) {
-                    console.error('Error saat memuat data:', xhr.responseText || error);
-                }
-            },
-            pageLength: 5,
-            lengthMenu: [5, 10, 25, 50],
-            columns: [
-    { data: 'start_time', name: 'start_time' },
-    { 
-        data: 'distance', 
-        name: 'distance', 
-        render: function (data, type, row) {
-            if (type === 'display' || type === 'filter') {
-                // Cek apakah data valid dan merupakan angka
-                var value = parseFloat(data);
-                
-                // Jika data bukan angka atau null, kembalikan tanda strip '-'
-                if (isNaN(value) || value === null) {
-                    return '-'; // Kembalikan simbol atau teks pengganti jika data tidak valid
-                }
-
-                // Jika data kurang dari 1 km, konversi ke meter
-                if (value < 1) {
-                    return (value * 1000).toFixed(0) + ' m'; // Konversi ke meter
-                }
-
-                // Jika data >= 1 km, tampilkan dalam kilometer
-                return value.toFixed(2) + ' km';
-            }
-
-            // Jika bukan tipe display/filter, kembalikan data asli
-            return data;
-        }
-
-    },
-    { data: 'duration', name: 'duration' },
-    {
-        data: 'id',
-        render: function (data) {
-            return `
-                <a href="/history/${data}/polyline" 
-                   class="w-10 h-10 bg-blue-500 text-blue rounded hover:bg-blue-600 flex items-center justify-center">
-                    <i class="fas fa-map-marker-alt"></i>
-                </a>`;
-        },
-        orderable: false,
-        searchable: false
-    }
-]
-    });
+       
+        
     </script>
         
     
