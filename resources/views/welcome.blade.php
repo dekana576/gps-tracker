@@ -16,10 +16,6 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <link rel="manifest" href="/manifest.json">
@@ -28,6 +24,7 @@
 
 
     <!-- Custom Styles -->
+</head>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap'); /* Import custom font */
 
@@ -215,7 +212,6 @@
 
       
     </style>
-</head>
 
 <body>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -290,77 +286,7 @@
         </div>
     </div>
     
-    <!-- History View -->
-<div id="historyContainer" style="display: none; margin-top: 20px;">
-    <div class="container">
-        <div class="container mt-5">
-            <h3 class="text-center mb-4">User History Table</h3>
-
-            <!-- Kotak Statistik -->
-            <div class="container mb-4">
-
-                
-    <!-- Group 1 -->
-    <div class="d-flex justify-content-between mb-3">
-        <div class="card text-center flex-fill mx-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Distance</h5>
-                <p class="card-text" id="totalDistance">{{ $user->total_distance ?? 0 }} </p>
-            </div>
-        </div>
-        <div class="card text-center flex-fill mx-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Duration</h5>
-                <p class="card-text" id="totalDuration">{{ $user->histories->first()->total_duration ?? 'N/A' }}</p>
-            </div>
-        </div>
-    </div>
-    <!-- Group 2 -->
-    <div class="d-flex justify-content-between">
-        <div class="card text-center flex-fill mx-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Calories</h5>
-                <p class="card-text" id="totalCalories">{{ $user->total_calori ?? 0 }} kcal</p>
-            </div>
-        </div>
-        <div class="card text-center flex-fill mx-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Steps</h5>
-                <p class="card-text" id="totalSteps">{{ $user->total_steps ?? 0 }} steps</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-            <!-- Akhir Kotak Statistik -->
-
-            <table id="historyTable" class="table table-striped table-bordered table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Start Time</th>
-                        <th>Distance (km)</th>
-                        <th>Duration</th>
-                        <th>Polyline</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        
-        <nav>
-            <ul class="pagination justify-content-center" id="paginationLinks"></ul>
-        </nav>
-        
-        <div class="mt-5 pt-5 text-center">
-            <form method="POST" action="{{ route('logout') }}" class="d-grid">
-                @csrf
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
-    </div>
-</div>
-
+   
     
     
     <!-- Footer -->
