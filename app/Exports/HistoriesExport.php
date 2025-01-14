@@ -29,7 +29,7 @@ class HistoriesExport implements FromCollection, WithHeadings, WithMapping, With
             'No',
             'Username',
             'Company Name',
-            'Distance (km)',
+            'Distance (KM)',
             'Duration',
             'Start Time',
         ];

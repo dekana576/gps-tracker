@@ -39,7 +39,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping, WithStyl
             'ID',
             'Name',
             'Company Name',
-            'Total Distance (km)',
+            'Total Distance (KM)',
             'Total Duration',
         ];
     }
