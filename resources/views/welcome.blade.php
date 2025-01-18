@@ -324,8 +324,8 @@ function showNotification(title, body) {
         navigator.serviceWorker.getRegistration().then(function (registration) {
             registration.showNotification(title, {
                 body: body,
-                icon: "images/astra-honda-motor-logo.png",
-                badge: "images/astra-honda-motor-logo.png",
+                icon: "images/best.png",
+                badge: "images/best.png",
                 vibrate: [200, 100, 200],
                 actions: [
                     { action: 'view', title: 'Lihat' },
