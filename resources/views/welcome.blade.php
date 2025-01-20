@@ -301,6 +301,15 @@
     <script>
         
 
+        navigator.serviceWorker.ready.then(function (registration) {
+            registration.sync.register('sync-location').then(function () {
+                console.log('Background sync registered');
+            }).catch(function (err) {
+                console.error('Background sync failed:', err);
+            });
+        });
+
+
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
@@ -337,6 +346,12 @@ function showNotification(title, body) {
     }
 }
 
+function notifyLocationUpdate(lat, lng) {
+    showNotification('Lokasi Diperbarui', `Lokasi Anda: ${lat}, ${lng}`);
+}
+
+
+
 
 let wakeLock = null;
 
@@ -348,9 +363,17 @@ async function requestWakeLock() {
         });
         console.log('Wake lock active');
     } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
+        console.error('Wake lock error:', err);
     }
 }
+
+// Pastikan wake lock diperbarui secara berkala
+setInterval(() => {
+    if (!wakeLock) {
+        requestWakeLock();
+    }
+}, 60000); // Perbarui setiap 1 menit
+
 
 document.getElementById('startTracking').addEventListener('click', requestWakeLock);
 
@@ -441,6 +464,9 @@ document.getElementById('startTracking').addEventListener('click', requestWakeLo
         const latlng = [position.coords.latitude, position.coords.longitude];
         positions.push(latlng);
         polyline.addLatLng(latlng);
+
+        // Tampilkan notifikasi pembaruan lokasi
+    notifyLocationUpdate(position.coords.latitude, position.coords.longitude);
 
         if (marker) map.removeLayer(marker);
         marker = L.marker(latlng).addTo(map);
